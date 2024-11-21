@@ -1,12 +1,8 @@
 ########################## 
 ## Load modules
 import numpy as np
-from scipy import optimize
-import sys
-import random
 from numba import jit
-from numba_nelder_mead import nelder_mead
-from VolcGases import functions
+from volc_gases.VolcGases import functions
 ################################
 
 ## The VolcGases outgassing model is described in Wogan et al. (2020; PSJ), and must be installed prior to running this code: https://github.com/Nicholaswogan/VolcGases
