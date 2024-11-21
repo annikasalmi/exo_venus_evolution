@@ -12,6 +12,7 @@ import sys
 import os
 import shutil
 import contextlib
+from user_tools.tools import VENUS_ROOT
 ####################
 
 num_runs = 720 # Number of forward model runs
