@@ -4,21 +4,18 @@ import time
 #model_run_time = time.time()
 #time.sleep(1400)
 import numpy as np
-import pylab
 from joblib import Parallel, delayed
 from all_classes import * 
 from main import forward_model
-import sys
 import os
 import shutil
-import contextlib
 from user_tools.tools import VENUS_ROOT
 ####################
 
 num_runs = 720 # Number of forward model runs
 num_cores = 60 # For parallelization, check number of cores with multiprocessing.cpu_count()
 if os.path.exists('switch_garbage3'):
-    os.path.rm('switch_garbage3')
+    shutil.rmtree('switch_garbage3')
 os.mkdir('switch_garbage3')
 
 #Choose planet
