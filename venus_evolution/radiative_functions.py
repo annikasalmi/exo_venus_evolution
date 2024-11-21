@@ -1,15 +1,10 @@
 ##################################
 import numpy as np
-import pylab
 from scipy.integrate import *
-from scipy.interpolate import interp1d
-from scipy import optimize
-import pdb
-import scipy.interpolate
 from numba import jit
-import time
+from user_tools.tools import VENUS_ROOT
+import os
 #################################
-
    
 
 ### H2O and CO2 ranges for OLR grid
@@ -18,20 +13,20 @@ P_CO2_grid_new = np.logspace(1,8,24)
 
 
 ########### OLR grid used for Tstrat sensitivity test ####
-OLR_hybrid_FIX=np.load("OLR_200_FIX_flat.npy")
+OLR_hybrid_FIX=np.load(os.path.join(VENUS_ROOT,"OLR_200_FIX_flat.npy"))
 OLR_hybrid_FIX = np.log10(OLR_hybrid_FIX)
-water_frac_multi_new=np.load("Atmo_frac_200_FIX_flat.npy")
-fH2O_new = np.load("fH2O_200_FIX_flat.npy")
+water_frac_multi_new=np.load(os.path.join(VENUS_ROOT,"Atmo_frac_200_FIX_flat.npy"))
+fH2O_new = np.load(os.path.join(VENUS_ROOT, "fH2O_200_FIX_flat.npy"))
 # dont use k=0 for anything, and dont use k=1 for OLR (ok for fH2O though)
 T_surf_grid = np.linspace(274,4000,200)
 Te_grid = np.linspace(150,350,8)
 ##############################################################
 
 ########### OLR grid used for nominal model ##############
-OLR_hybrid_FIX=np.load("OLR_200_FIX_cold.npy")
+OLR_hybrid_FIX=np.load(os.path.join(VENUS_ROOT, "OLR_200_FIX_cold.npy"))
 OLR_hybrid_FIX = np.log10(OLR_hybrid_FIX)
-water_frac_multi_new=np.load("Atmo_frac_200_FIX_cold.npy")
-fH2O_new = np.load("fH2O_200_FIX_cold.npy")
+water_frac_multi_new=np.load(os.path.join(VENUS_ROOT, "Atmo_frac_200_FIX_cold.npy"))
+fH2O_new = np.load(os.path.join(VENUS_ROOT, "fH2O_200_FIX_cold.npy"))
 T_surf_grid = np.linspace(250,4000,200)
 Te_grid = np.linspace(180,350,10)
 ##########################################################

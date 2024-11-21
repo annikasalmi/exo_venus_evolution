@@ -7,11 +7,12 @@ import numpy as np
 import pylab
 from joblib import Parallel, delayed
 from all_classes import * 
-from Main_code_callable import forward_model
+from venus_evolution.main import forward_model
 import sys
 import os
 import shutil
 import contextlib
+from user_tools.tools import VENUS_ROOT
 ####################
 
 num_runs = 720 # Number of forward model runs
