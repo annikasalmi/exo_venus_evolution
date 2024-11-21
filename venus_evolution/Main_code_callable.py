@@ -20,6 +20,7 @@ from Albedo_module import *
 from thermodynamic_variables import *
 import time
 from numba import jit
+from user_tools.tools import VENUS_ROOT
 #####################
 
 def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_inputs,MC_inputs,max_time_attempt):
@@ -562,7 +563,7 @@ def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_i
                     if switch_counter == 0 :
                         np.save(switch_name,y)
                     else:
-                        y = np.load(load_name2)
+                        y = np.load(os.path.join(VENUS_ROOT, load_name2))
                     switch_counter = switch_counter + 1
                     return [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
                 else: #switch has worked, back to normal, reset for next magma ocean transition
@@ -629,7 +630,7 @@ def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_i
                     if solid_counter == 0:
                         np.save(liquid_name,y)
                     else:
-                        y = np.load(load_name)
+                        y = np.load(os.path.join(VENUS_ROOT, load_name))
                     solid_counter = solid_counter + 1
                     return [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
                 else:
