@@ -75,8 +75,8 @@ END EXPLANATION OF CODE STRUCTURE
 DESCRIPTION OF INPUT/OUTPUT VARIABLES that are used in Plot_MC_output.py
 
 Consider the following example:
-inputs = np.load('Venus_outputs_revisions.npy',allow_pickle = True) #Time-evolution of model variables
-MCinputs = np.load('Venus_inputs_revisions.npy',allow_pickle = True) #Corresponding parameter values sampled in Monte Carlo analysis
+inputs = np.load(os.path.join(VENUS_ROOT, 'Venus_outputs_revisions.npy',allow_pickle = True)) #Time-evolution of model variables
+MCinputs = np.load(os.path.join(VENUS_ROOT, 'Venus_inputs_revisions.npy',allow_pickle = True) #Corresponding parameter values sampled in Monte Carlo analysis
 
 inputs:
     • Total_time

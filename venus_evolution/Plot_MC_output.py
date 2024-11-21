@@ -5,7 +5,7 @@ from scipy.interpolate import interp1d
 from scipy import optimize
 import scipy.optimize 
 from all_classes import *
-import time
+import os
 from other_functions import *
 import pdb
 from user_tools.tools import VENUS_ROOT
@@ -54,11 +54,11 @@ def use_one_output(inputs,MCinputs):
 N2_Pressure = 1e5 # Do not change
 
 ### Load outputs and inputs. Note it is possible to load multiple output files and process them all at once
-inputs = np.load('Venus_ouputs_revisions.npy',allow_pickle = True) 
-MCinputs = np.load('Venus_inputs_revisions.npy',allow_pickle = True)
+inputs = np.load(os.path.join(VENUS_ROOT, 'Venus_ouputs_revisions.npy',allow_pickle = True) 
+MCinputs = np.load(os.path.join(VENUS_ROOT, 'Venus_inputs_revisions.npy',allow_pickle = True)
 use_one_output(inputs,MCinputs)
-#inputs = np.load('Venus_ouputs_revisions3.npy',allow_pickle = True) 
-#MCinputs = np.load('Venus_inputs_revisions3.npy',allow_pickle = True)
+#inputs = np.load(os.path.join(VENUS_ROOT, 'Venus_ouputs_revisions3.npy',allow_pickle = True) 
+#MCinputs = np.load(os.path.join(VENUS_ROOT, 'Venus_inputs_revisions3.npy',allow_pickle = True)
 #use_one_output(inputs,MCinputs)
 
 #Pause here to check number of successful model runs etc. Type 'c' to continue.
