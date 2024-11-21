@@ -6,14 +6,14 @@ import numba as nb
 import os
 import platform
 
-rootdir = os.path.dirname(os.path.realpath(__file__))+'/'
+rootdir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 if platform.uname()[0] == "Windows":
     name = "libvolcgases.dll"
 elif platform.uname()[0] == "Linux":
     name = "libvolcgases.so"
 else:
     name = "libvolcgases.dylib"
-libvolcgases = ct.CDLL(rootdir+name)
+libvolcgases = ct.CDLL(os.path.join(rootdir,name))
 solve_gases_c = libvolcgases.solve_gases_c
 solve_gases_c.argtypes = [ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, ct.c_void_p, \
                           ct.c_void_p, ct.c_void_p, ct.c_void_p, \

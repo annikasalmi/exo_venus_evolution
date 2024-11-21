@@ -7,7 +7,7 @@ import numpy as np
 import pylab
 from joblib import Parallel, delayed
 from all_classes import * 
-from venus_evolution.main import forward_model
+from main import forward_model
 import sys
 import os
 import shutil
@@ -17,6 +17,8 @@ from user_tools.tools import VENUS_ROOT
 
 num_runs = 720 # Number of forward model runs
 num_cores = 60 # For parallelization, check number of cores with multiprocessing.cpu_count()
+if os.path.exists('switch_garbage3'):
+    os.path.rm('switch_garbage3')
 os.mkdir('switch_garbage3')
 
 #Choose planet
@@ -214,7 +216,7 @@ def processInput(i):
                     print ('didint work ',i)
                     outs = []
                     fail_name = 'failed_outputs3/%d' %i
-                    np.save(fail_name,[Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar])
+                    # np.save(fail_name,[Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar])
        
 
     print ('done with ',i)
