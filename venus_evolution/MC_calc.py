@@ -12,7 +12,7 @@ import shutil
 from user_tools.tools import VENUS_ROOT
 ####################
 
-num_runs = 720 # Number of forward model runs
+num_runs = 1 # Number of forward model runs
 num_cores = mp.cpu_count() 
 if os.path.exists('switch_garbage3'):
     shutil.rmtree('switch_garbage3')
@@ -180,6 +180,7 @@ def processInput(i):
             Venus_Numerics.total_steps = 7
             max_time_attempt = 0.7
             outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt)   
+            print('success')
             if outs.total_time[-1] < 4e9:
                 # print ("Not enough time!")
                 raise Exception      
@@ -192,6 +193,7 @@ def processInput(i):
                 Venus_Init_conditions.Init_fluid_H2O = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_H2O
                 Venus_Init_conditions.Init_fluid_CO2 = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_CO2
                 outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt)  
+                print('success')
                 if outs.total_time[-1] < 4e9:
                     # print ("Not enough time!")
                     raise Exception           
@@ -204,6 +206,7 @@ def processInput(i):
                     Venus_Init_conditions.Init_fluid_H2O = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_H2O
                     Venus_Init_conditions.Init_fluid_CO2 = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_CO2
                     outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt)     
+                    print('success')
                     if outs.total_time[-1] < 4e9:
                         raise Exception      
                 except:
