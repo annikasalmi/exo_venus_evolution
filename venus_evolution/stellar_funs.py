@@ -1,13 +1,15 @@
 import numpy as np
 from scipy.interpolate import interp1d
+import os
+from user_tools.tools import VENUS_ROOT
 
 def main_sun_fun(time,stellar_mass,tsat_XUV,beta_XUV,fsat):
     
     if stellar_mass == 1.0: 
-        stellar_data = np.loadtxt('Baraffe3.txt',skiprows=31) # for reproducing sun exactly
-    else:
-        print ("This version of code is only set up for solar mass stars")
-        return [time*0,time*0,time*0,time*0]
+        stellar_data = np.loadtxt(os.path.join(VENUS_ROOT,'Baraffe3.txt'),skiprows=31) # for reproducing sun exactly
+    # else:
+    #     print ("This version of code is only set up for solar mass stars")
+    #     return [time*0,time*0,time*0,time*0]
     
     stellar_array=[]
     for i in range(0,len(stellar_data[:,0])):

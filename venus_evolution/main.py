@@ -6,7 +6,6 @@ import pylab
 from scipy.integrate import *
 from scipy.interpolate import interp1d
 from scipy import optimize
-import pdb
 import scipy.optimize 
 from radiative_functions import *
 from other_functions import *
@@ -1845,3 +1844,6 @@ def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_i
         
     output_class = Model_outputs(total_time,total_y,FH2O_array,FCO2_array,MH2O_liq,MH2O_crystal,MCO2_liq,Pressre_H2O,CO2_Pressure_array,fO2_array,Mass_O_atm,Mass_O_dissolved,water_frac,Ocean_depth,Max_depth,Ocean_fraction)
     return output_class
+
+if __name__ == "__main__":
+    forward_model()
