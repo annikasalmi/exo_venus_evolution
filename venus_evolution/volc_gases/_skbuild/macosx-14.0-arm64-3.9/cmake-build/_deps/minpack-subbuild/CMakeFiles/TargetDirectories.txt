@@ -1,0 +1,3 @@
+/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/CMakeFiles/minpack-populate.dir
+/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/CMakeFiles/edit_cache.dir
+/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/CMakeFiles/rebuild_cache.dir

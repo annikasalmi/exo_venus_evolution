@@ -1,0 +1,11 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/private/var/folders/_v/z05kxyx10csft49vj24rtp1c0000gn/T/pip-build-env-46j6bd6c/overlay/lib/python3.9/site-packages/cmake/data/share/cmake-3.31/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:16 (project)"
+    message: |
+      The system is: Darwin - 23.6.0 - arm64
+...

@@ -1,0 +1,15 @@
+# This is a generated file and its contents are an internal implementation detail.
+# The download step will be re-executed if anything in this file changes.
+# No other meaning or use of this file is supported.
+
+method=git
+command=/private/var/folders/_v/z05kxyx10csft49vj24rtp1c0000gn/T/pip-build-env-46j6bd6c/overlay/lib/python3.9/site-packages/cmake/data/bin/cmake;-DCMAKE_MESSAGE_LOG_LEVEL=VERBOSE;-P;/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/minpack-populate-prefix/tmp/minpack-populate-gitclone.cmake
+source_dir=/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-src
+work_dir=/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps
+repository=https://github.com/fortran-lang/minpack.git
+remote=origin
+init_submodules=TRUE
+recurse_submodules=--recursive
+submodules=
+CMP0097=NEW
+      

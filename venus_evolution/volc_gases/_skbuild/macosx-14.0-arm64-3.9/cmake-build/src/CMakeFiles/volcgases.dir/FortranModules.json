@@ -1,0 +1,17 @@
+{
+	"modules" : 
+	{
+		"volcgases.mod" : 
+		{
+			"bmi" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/modules/volcgases.mod",
+			"is-private" : false
+		},
+		"volcgases_const.mod" : 
+		{
+			"bmi" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/modules/volcgases_const.mod",
+			"is-private" : false
+		}
+	},
+	"references" : {},
+	"usages" : {}
+}

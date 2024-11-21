@@ -1,0 +1,7 @@
+ninja_dyndep_version = 1.0
+build src/CMakeFiles/volcgases.dir/volcgases_const.f90.o | modules/volcgases_const.mod: dyndep
+  restat = 1
+
+build src/CMakeFiles/volcgases.dir/volcgases.f90.o | modules/volcgases.mod: dyndep | modules/minpack_module.mod modules/volcgases_const.mod
+  restat = 1
+

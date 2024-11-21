@@ -1,0 +1,25 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "src/CMakeFiles/minpack.dir/__/_deps/minpack-src/src/minpack.f90.o",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "modules/minpack_module.mod",
+					"is-interface" : true,
+					"logical-name" : "minpack_module.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "iso_fortran_env.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

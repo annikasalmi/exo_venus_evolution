@@ -1,0 +1,18 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "test/CMakeFiles/test_volcgases.dir/test_volcgases.f90.o",
+			"provides" : [],
+			"requires" : 
+			[
+				{
+					"logical-name" : "volcgases.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

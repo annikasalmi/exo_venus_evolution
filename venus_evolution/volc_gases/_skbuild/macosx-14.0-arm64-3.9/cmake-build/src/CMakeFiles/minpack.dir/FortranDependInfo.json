@@ -1,0 +1,29 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Release",
+	"cxx-modules" : {},
+	"database-info" : null,
+	"dir-cur-bld" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/src",
+	"dir-cur-src" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/src",
+	"dir-top-bld" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build",
+	"dir-top-src" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases",
+	"exports" : [],
+	"forward-modules-from-target-dirs" : [],
+	"include-dirs" : [],
+	"language" : "Fortran",
+	"linked-target-dirs" : [],
+	"module-dir" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/modules",
+	"sources" : 
+	{
+		"src/CMakeFiles/minpack.dir/__/_deps/minpack-src/src/minpack.f90.o" : 
+		{
+			"language" : "Fortran",
+			"source" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-src/src/minpack.f90"
+		}
+	},
+	"submodule-ext" : ".smod",
+	"submodule-sep" : "@"
+}

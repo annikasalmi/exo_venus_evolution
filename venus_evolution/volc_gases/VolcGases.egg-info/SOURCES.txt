@@ -1,0 +1,14 @@
+README.md
+pyproject.toml
+setup.py
+VolcGases/__init__.py
+VolcGases/functions.py
+VolcGases.egg-info/PKG-INFO
+VolcGases.egg-info/SOURCES.txt
+VolcGases.egg-info/dependency_links.txt
+VolcGases.egg-info/not-zip-safe
+VolcGases.egg-info/requires.txt
+VolcGases.egg-info/top_level.txt
+_skbuild/macosx-14.0-arm64-3.9/cmake-install/VolcGases/__init__.py
+_skbuild/macosx-14.0-arm64-3.9/cmake-install/VolcGases/functions.py
+_skbuild/macosx-14.0-arm64-3.9/cmake-install/VolcGases/libvolcgases.dylib
