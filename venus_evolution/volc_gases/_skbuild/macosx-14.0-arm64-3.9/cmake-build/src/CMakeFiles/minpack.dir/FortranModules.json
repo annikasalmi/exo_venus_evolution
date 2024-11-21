@@ -1,0 +1,12 @@
+{
+	"modules" : 
+	{
+		"minpack_module.mod" : 
+		{
+			"bmi" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/modules/minpack_module.mod",
+			"is-private" : false
+		}
+	},
+	"references" : {},
+	"usages" : {}
+}

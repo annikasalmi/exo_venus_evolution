@@ -1,0 +1,25 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "src/CMakeFiles/volcgases.dir/volcgases_const.f90.o",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "modules/volcgases_const.mod",
+					"is-interface" : true,
+					"logical-name" : "volcgases_const.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "iso_fortran_env.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}

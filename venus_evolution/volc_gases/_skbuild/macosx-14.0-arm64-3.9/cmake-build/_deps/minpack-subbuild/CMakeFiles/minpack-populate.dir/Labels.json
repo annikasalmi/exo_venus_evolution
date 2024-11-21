@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/CMakeFiles/minpack-populate"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/CMakeFiles/minpack-populate.rule"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/CMakeFiles/minpack-populate-complete.rule"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/minpack-populate-prefix/src/minpack-populate-stamp/minpack-populate-build.rule"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/minpack-populate-prefix/src/minpack-populate-stamp/minpack-populate-configure.rule"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/minpack-populate-prefix/src/minpack-populate-stamp/minpack-populate-download.rule"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/minpack-populate-prefix/src/minpack-populate-stamp/minpack-populate-install.rule"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/minpack-populate-prefix/src/minpack-populate-stamp/minpack-populate-mkdir.rule"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/minpack-populate-prefix/src/minpack-populate-stamp/minpack-populate-patch.rule"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/minpack-populate-prefix/src/minpack-populate-stamp/minpack-populate-test.rule"
+		},
+		{
+			"file" : "/Users/annikasalmi/funding_project_venus/venus_evolution/volc_gases/_skbuild/macosx-14.0-arm64-3.9/cmake-build/_deps/minpack-subbuild/minpack-populate-prefix/src/minpack-populate-stamp/minpack-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"minpack-populate"
+		],
+		"name" : "minpack-populate"
+	}
+}

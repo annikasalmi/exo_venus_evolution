@@ -1,0 +1,31 @@
+{
+	"revision" : 0,
+	"rules" : 
+	[
+		{
+			"outputs" : [],
+			"primary-output" : "src/CMakeFiles/volcgases.dir/volcgases.f90.o",
+			"provides" : 
+			[
+				{
+					"compiled-module-path" : "modules/volcgases.mod",
+					"is-interface" : true,
+					"logical-name" : "volcgases.mod"
+				}
+			],
+			"requires" : 
+			[
+				{
+					"logical-name" : "iso_c_binding.mod"
+				},
+				{
+					"logical-name" : "minpack_module.mod"
+				},
+				{
+					"logical-name" : "volcgases_const.mod"
+				}
+			]
+		}
+	],
+	"version" : 0
+}
