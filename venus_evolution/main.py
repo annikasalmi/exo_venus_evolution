@@ -11,6 +11,7 @@ from radiative_functions import *
 from other_functions import *
 from stellar_funs import main_sun_fun
 from carbon_cycle_model import *
+from numba_nelder_mead import nelder_mead
 from escape_functions import *
 from all_classes import *
 #from outgassing_module import *

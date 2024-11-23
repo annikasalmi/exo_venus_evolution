@@ -221,7 +221,10 @@ def processInput(i):
     # print ('done with ',i)
     return outs
 
-Everything = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs) #Run parallelized code
+# Everything = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs) #Run parallelized code
+Everything = []
+for i in inputs:
+    Everything.append(processInput(i))
 input_mega=[] # Collect input parameters for saving
 for kj in range(0,len(inputs)):
     # print ('saving garbage',kj)
