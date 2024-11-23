@@ -3,10 +3,12 @@
 #####################
 import numpy as np
 import pylab
+import os
 from scipy.integrate import *
 from scipy.interpolate import interp1d
 from scipy import optimize
 import scipy.optimize 
+
 from radiative_functions import *
 from other_functions import *
 from stellar_funs import main_sun_fun
@@ -23,8 +25,12 @@ from numba import jit
 from user_tools.tools import VENUS_ROOT
 #####################
 
-def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_inputs,MC_inputs,max_time_attempt):
 
+def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_inputs,MC_inputs,max_time_attempt,runtime_warning=True):
+
+    if runtime_warning is False:
+        import warnings
+        warnings.filterwarnings("ignore") 
    
     plot_switch = "n" # change to "y" to plot individual model runs for diagnostic purposes
     print_switch = Switch_Inputs.print_switch # This controls whether outputs print during calculations (slows things down, but useful for diagnostics)
@@ -561,7 +567,7 @@ def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_i
                     switch_name = "switch_garbage/switch_IC_%d" %seed_save
                     load_name2 = switch_name+".npy"
                     if switch_counter == 0 :
-                        np.save(switch_name,y)
+                        np.save(os.path.join(VENUS_ROOT,switch_name),y)
                     else:
                         y = np.load(os.path.join(VENUS_ROOT, load_name2))
                     switch_counter = switch_counter + 1
@@ -628,7 +634,7 @@ def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_i
                     liquid_name = "switch_garbage/liquid_IC_%d" %seed_save
                     load_name = liquid_name + ".npy"
                     if solid_counter == 0:
-                        np.save(liquid_name,y)
+                        np.save(os.path.join(VENUS_ROOT,liquid_name),y)
                     else:
                         y = np.load(os.path.join(VENUS_ROOT, load_name))
                     solid_counter = solid_counter + 1
