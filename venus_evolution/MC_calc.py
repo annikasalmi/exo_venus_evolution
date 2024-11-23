@@ -1,18 +1,24 @@
-##################### 
-# load modules
+'''
+Run MC calculations on the whole things.
+'''
 import multiprocessing as mp
 #model_run_time = time.time()
 #time.sleep(1400)
 import numpy as np
+
+import os
 from joblib import Parallel, delayed
+import shutil
+RUNTIME_WARNING=False #suppress runtime warnings if set to false 
+if RUNTIME_WARNING is False:
+    import warnings
+    warnings.filterwarnings("ignore")   
+
 from all_classes import * 
 from main import forward_model
-import os
-import shutil
-from user_tools.tools import VENUS_ROOT
-####################
 
-num_runs = 1 # Number of forward model runs
+num_runs = 10 # Number of forward model runs
+
 num_cores = mp.cpu_count() 
 if os.path.exists('switch_garbage3'):
     shutil.rmtree('switch_garbage3')
@@ -164,13 +170,15 @@ def processInput(i):
             # print ('starting ',i)
             max_time_attempt = 1.5
             [Earth_inputs,Earth_Planet_inputs,Earth_Init_conditions,Earth_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
-            outs = forward_model(Earth_inputs,Earth_Planet_inputs,Earth_Init_conditions,Earth_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt)
+
+            outs = forward_model(Earth_inputs,Earth_Planet_inputs,Earth_Init_conditions,Earth_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)
             
         elif which_planet =="V":  
             # print ('starting ',i)
             max_time_attempt = 1.5
             [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
-            outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt) 
+
+            outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING) 
             print('success')
     
     except:
@@ -179,7 +187,7 @@ def processInput(i):
             [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
             Venus_Numerics.total_steps = 7
             max_time_attempt = 0.7
-            outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt)   
+            outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)   
             print('success')
             if outs.total_time[-1] < 4e9:
                 # print ("Not enough time!")
@@ -192,7 +200,7 @@ def processInput(i):
                 max_time_attempt = 0.2
                 Venus_Init_conditions.Init_fluid_H2O = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_H2O
                 Venus_Init_conditions.Init_fluid_CO2 = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_CO2
-                outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt)  
+                outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)  
                 print('success')
                 if outs.total_time[-1] < 4e9:
                     # print ("Not enough time!")
@@ -205,7 +213,7 @@ def processInput(i):
                     Venus_Numerics.total_steps = 9
                     Venus_Init_conditions.Init_fluid_H2O = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_H2O
                     Venus_Init_conditions.Init_fluid_CO2 = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_CO2
-                    outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt)     
+                    outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)     
                     print('success')
                     if outs.total_time[-1] < 4e9:
                         raise Exception      
@@ -221,10 +229,8 @@ def processInput(i):
     # print ('done with ',i)
     return outs
 
-# Everything = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs) #Run parallelized code
-Everything = []
-for i in inputs:
-    Everything.append(processInput(i))
+Everything = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs) #Run parallelized code
+
 input_mega=[] # Collect input parameters for saving
 for kj in range(0,len(inputs)):
     # print ('saving garbage',kj)
