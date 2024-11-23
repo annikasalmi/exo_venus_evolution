@@ -1,11 +1,11 @@
 '''
 Run MC calculations on the whole things.
 '''
-
 import multiprocessing as mp
 #model_run_time = time.time()
 #time.sleep(1400)
 import numpy as np
+
 import os
 from joblib import Parallel, delayed
 import shutil
@@ -18,6 +18,7 @@ from all_classes import *
 from main import forward_model
 
 num_runs = 10 # Number of forward model runs
+
 num_cores = mp.cpu_count() 
 if os.path.exists('switch_garbage3'):
     shutil.rmtree('switch_garbage3')
@@ -169,12 +170,14 @@ def processInput(i):
             # print ('starting ',i)
             max_time_attempt = 1.5
             [Earth_inputs,Earth_Planet_inputs,Earth_Init_conditions,Earth_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
+
             outs = forward_model(Earth_inputs,Earth_Planet_inputs,Earth_Init_conditions,Earth_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)
             
         elif which_planet =="V":  
             # print ('starting ',i)
             max_time_attempt = 1.5
             [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
+
             outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING) 
             print('success')
     

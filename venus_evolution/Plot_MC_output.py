@@ -3,6 +3,7 @@ import pylab
 from scipy.integrate import *
 from scipy.interpolate import interp1d
 from scipy import optimize
+
 RUNTIME_WARNING=False #suppress runtime warnings if set to false 
 if RUNTIME_WARNING is False:
     import warnings
@@ -655,7 +656,7 @@ pylab.loglog(total_time[0],confidence_water_frac[1]*confidence_Pressre_H2O[1]/1e
 pylab.fill_between(total_time[0],confidence_water_frac[0]*confidence_Pressre_H2O[0]/1e5, confidence_water_frac[2]*confidence_Pressre_H2O[2]/1e5, color='blue', alpha=0.4)  
 CO2_label = 'CO$_2$'
 pylab.loglog(total_time[0],confidence_y[1][23]/1e5,'r',label=CO2_label)
-pylab.fill_between(total_time[0],confidence_y[0][23]/1e5, confidence_y[2][23]/1e5, color='red', alpha=0.4)  
+pylab.fill_between(total_time[0],confidence_y[0][23]/1e5, confidence_y[2][23]/1e5, color='red', alpha=0.4) 
 pylab.xticks([1e0,1e1,1e2,1e3,1e4,1e5,1e6,1e7,1e8,1e9])
 pylab.xlim([x_low, x_high])
 pylab.legend(frameon=False)
@@ -749,6 +750,7 @@ pylab.semilogx(total_time[0],confidence_y[1][20]*365*24*60*60/(0.032*1e12),'b' ,
 pylab.fill_between(total_time[0],confidence_y[0][20]*365*24*60*60/(0.032*1e12),confidence_y[2][20]*365*24*60*60/(0.032*1e12), color='blue', alpha=0.4)  
 pylab.semilogx(total_time[0],confidence_y[1][21]*365*24*60*60/(0.032*1e12),'r' ,label = 'Outgassing')
 pylab.fill_between(total_time[0],confidence_y[0][21]*365*24*60*60/(0.032*1e12),confidence_y[2][21]*365*24*60*60/(0.032*1e12), color='red', alpha=0.4)  
+
 pylab.semilogx(total_time[0],(confidence_y[1][18]+confidence_y[1][19]+confidence_y[1][20]+confidence_y[1][21])*365*24*60*60/(0.032*1e12),'c:' ,label = 'Net')
 O2_label = 'O$_2$ flux (Tmol/yr)'
 pylab.ylabel(O2_label)
