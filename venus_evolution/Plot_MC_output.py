@@ -55,8 +55,8 @@ def use_one_output(inputs,MCinputs):
 N2_Pressure = 1e5 # Do not change
 
 ### Load outputs and inputs. Note it is possible to load multiple output files and process them all at once
-inputs = np.load('Venus_ouputs_revisions.npy',allow_pickle = True)
-MCinputs = np.load('Venus_inputs_revisions.npy',allow_pickle = True)
+inputs = np.load('Venus_ouputs_revisions_gliese_1.npy',allow_pickle = True)
+MCinputs = np.load('Venus_inputs_revisions_gliese_1.npy',allow_pickle = True)
 use_one_output(inputs,MCinputs)
 
 #Pause here to check number of successful model runs etc. Type 'c' to continue.
