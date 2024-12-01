@@ -9,8 +9,8 @@ if RUNTIME_WARNING is False:
     import warnings
     warnings.filterwarnings("ignore")  
 
-from all_classes import *
-from other_functions import *
+from venus_evolution.classes import *
+from venus_evolution.models.other_functions import *
 new_inputs = [] #actually ouputs
 inputs_for_MC=[]
 Total_Fe_array = []
@@ -123,7 +123,7 @@ def interpolate_class(saved_outputs):
         f1 = interp1d(time,saved_outputs[i].Ocean_fraction[time_starts:])
         new_Ocean_fraction = f1(new_time) 
 
-        output_class = Model_outputs(new_time,new_total_y,new_FH2O_array,new_FCO2_array,new_MH2O_liq,new_MH2O_crystal,new_MCO2_liq,new_Pressre_H2O,new_CO2_Pressure_array,new_fO2_array,new_Mass_O_atm,new_Mass_O_dissolved,new_water_frac,new_Ocean_depth,new_Max_depth,new_Ocean_fraction)
+        output_class = ModelOutputs(new_time,new_total_y,new_FH2O_array,new_FCO2_array,new_MH2O_liq,new_MH2O_crystal,new_MCO2_liq,new_Pressre_H2O,new_CO2_Pressure_array,new_fO2_array,new_Mass_O_atm,new_Mass_O_dissolved,new_water_frac,new_Ocean_depth,new_Max_depth,new_Ocean_fraction)
         outs.append(output_class)
 
     return outs
@@ -261,7 +261,7 @@ Late_melt_production = []
 
 mantle_CO2_fraction = []
 mantle_H2O_fraction=[]
-from outgassing_module import *
+from venus_evolution.models.outgassing_module import *
 
 for k in range(0,len(inputs)):
     f_O2_FMQ.append(inputs[k].Ocean_fraction*0 )

@@ -1,4 +1,4 @@
-class Switch_Inputs:
+class SwitchInputs:
   def __init__(self, print_switch, speedup_flag, start_speed , fin_speed,heating_switch,C_cycle_switch,Start_time):
     self.print_switch = print_switch
     self.speedup_flag = speedup_flag
@@ -8,7 +8,7 @@ class Switch_Inputs:
     self.C_cycle_switch = C_cycle_switch
     self.Start_time = Start_time
 
-class Planet_inputs:
+class PlanetInputs:
   def __init__(self, RE,ME,rc,pm,Total_Fe_mol_fraction,Planet_sep,albedoC,albedoH):
     self.RE = RE
     self.ME = ME
@@ -19,7 +19,7 @@ class Planet_inputs:
     self.albedoC = albedoC
     self.albedoH = albedoH
     
-class Init_conditions:
+class InitConditions:
   def __init__(self, Init_solid_H2O,Init_fluid_H2O,Init_solid_O,Init_fluid_O,Init_solid_FeO1_5,Init_solid_FeO,Init_solid_CO2,Init_fluid_CO2):
     self.Init_solid_H2O = Init_solid_H2O
     self.Init_fluid_H2O = Init_fluid_H2O
@@ -46,7 +46,7 @@ class Numerics:
     self.tfin4 = tfin4
 
 
-class Stellar_inputs:
+class StellarInputs:
   def __init__(self, tsat_XUV, Stellar_Mass,fsat, beta0 , epsilon ):
     self.tsat_XUV = tsat_XUV
     self.Stellar_Mass = Stellar_Mass
@@ -54,7 +54,7 @@ class Stellar_inputs:
     self.beta0 = beta0
     self.epsilon  = epsilon 
     
-class MC_inputs:
+class MCInputs:
   def __init__(self, esc_a, esc_b, esc_c, esc_d,ccycle_a , ccycle_b ,supp_lim, interiora , interiorb,interiorc,interiord,interiore,interiorf,interiorg,ocean_a,ocean_b,K_over_U,Tstrat,surface_magma_frac):
     self.esc_a = esc_a
     self.esc_b = esc_b
@@ -76,7 +76,7 @@ class MC_inputs:
     self.Tstrat = Tstrat
     self.surface_magma_frac = surface_magma_frac
 
-class Model_outputs:
+class ModelOutputs:
   def __init__(self, total_time,total_y,FH2O_array,FCO2_array,MH2O_liq,MH2O_crystal,MCO2_liq,Pressre_H2O,CO2_Pressure_array,fO2_array,Mass_O_atm,Mass_O_dissolved,water_frac,Ocean_depth,Max_depth,Ocean_fraction):
     self.total_time = total_time
     self.total_y = total_y

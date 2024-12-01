@@ -9,93 +9,93 @@ from scipy.interpolate import interp1d
 from scipy import optimize
 import scipy.optimize 
 
-from radiative_functions import *
-from other_functions import *
-from stellar_funs import main_sun_fun
-from carbon_cycle_model import *
-from numba_nelder_mead import nelder_mead
-from escape_functions import *
-from all_classes import *
+from venus_evolution.models.radiative_functions import *
+from venus_evolution.models.other_functions import *
+from venus_evolution.models.stellar_funs import main_sun_fun
+from venus_evolution.models.carbon_cycle_model import *
+from venus_evolution.models.numba_nelder_mead import nelder_mead
+from venus_evolution.models.escape_functions import *
+from venus_evolution.classes import *
 #from outgassing_module import *
-from outgassing_module_fast import *
-from albedo_module import *
-from thermodynamic_variables import *
+from venus_evolution.models.outgassing_module_fast import *
+from venus_evolution.models.albedo_module import *
+from venus_evolution.models.thermodynamic_variables import *
 import time
 from numba import jit
 from user_tools.tools import VENUS_ROOT
 #####################
 
-def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_inputs,MC_inputs,max_time_attempt,runtime_warning=True):
+def forward_model(SwitchInputs,PlanetInputs,InitConditions,Numerics,StellarInputs,MCInputs,max_time_attempt,runtime_warning=True):
 
     if runtime_warning is False:
         import warnings
         warnings.filterwarnings("ignore") 
    
     plot_switch = "n" # change to "y" to plot individual model runs for diagnostic purposes
-    print_switch = Switch_Inputs.print_switch # This controls whether outputs print during calculations (slows things down, but useful for diagnostics)
-    speedup_flag = Switch_Inputs.speedup_flag # Redundant - does not do anything in current version
-    start_speed =  Switch_Inputs.start_speed # Redundant - does not do anything in current version
-    fin_speed = Switch_Inputs.fin_speed # Redundant - does not do anything in current version
-    heating_switch = Switch_Inputs.heating_switch # Controls locus of internal heating, keep default values
-    C_cycle_switch = Switch_Inputs.C_cycle_switch  # Turns carbon cycle on or off, keep default values
+    print_switch = SwitchInputs.print_switch # This controls whether outputs print during calculations (slows things down, but useful for diagnostics)
+    speedup_flag = SwitchInputs.speedup_flag # Redundant - does not do anything in current version
+    start_speed =  SwitchInputs.start_speed # Redundant - does not do anything in current version
+    fin_speed = SwitchInputs.fin_speed # Redundant - does not do anything in current version
+    heating_switch = SwitchInputs.heating_switch # Controls locus of internal heating, keep default values
+    C_cycle_switch = SwitchInputs.C_cycle_switch  # Turns carbon cycle on or off, keep default values
     
-    RE = Planet_inputs.RE #Planet radius relative Earth
-    ME = Planet_inputs.ME  #Planet mass relative Earth
-    pm = Planet_inputs.pm  #Average mantle density
-    rc = Planet_inputs.rc #Metallic core radius (m)
-    Total_Fe_mol_fraction = Planet_inputs.Total_Fe_mol_fraction # iron mol fraction in mantle
+    RE = PlanetInputs.RE #Planet radius relative Earth
+    ME = PlanetInputs.ME  #Planet mass relative Earth
+    pm = PlanetInputs.pm  #Average mantle density
+    rc = PlanetInputs.rc #Metallic core radius (m)
+    Total_Fe_mol_fraction = PlanetInputs.Total_Fe_mol_fraction # iron mol fraction in mantle
     
-    Planet_sep = Planet_inputs.Planet_sep #planet-star separation (AU)
-    albedoC = Planet_inputs.albedoC  #cold state albedo   
-    albedoH = Planet_inputs.albedoH   #hot state albedo
+    Planet_sep = PlanetInputs.Planet_sep #planet-star separation (AU)
+    albedoC = PlanetInputs.albedoC  #cold state albedo   
+    albedoH = PlanetInputs.albedoH   #hot state albedo
 
     #Stellar parameters
-    tsat_XUV = Stellar_inputs.tsat_XUV  #XUV saturation time
-    Stellar_Mass = Stellar_inputs.Stellar_Mass #stellar mass (relative sun)
-    fsat = Stellar_inputs.fsat
-    beta0 = Stellar_inputs.beta0
-    epsilon = Stellar_inputs.epsilon
+    tsat_XUV = StellarInputs.tsat_XUV  #XUV saturation time
+    Stellar_Mass = StellarInputs.Stellar_Mass #stellar mass (relative sun)
+    fsat = StellarInputs.fsat
+    beta0 = StellarInputs.beta0
+    epsilon = StellarInputs.epsilon
 
     #generate random seed for this forward model call    
     np.random.seed(int(time.time()))
     seed_save = np.random.randint(1,1e9)
 
     ## Initial volatlie and redox conditions:
-    Init_solid_H2O = Init_conditions.Init_solid_H2O
-    Init_fluid_H2O = Init_conditions.Init_fluid_H2O
-    Init_solid_O= Init_conditions.Init_solid_O
-    Init_fluid_O = Init_conditions.Init_fluid_O
-    Init_solid_FeO1_5 = Init_conditions.Init_solid_FeO1_5
-    Init_solid_FeO = Init_conditions.Init_solid_FeO
-    Init_fluid_CO2 = Init_conditions.Init_fluid_CO2
-    Init_solid_CO2= Init_conditions.Init_solid_CO2
+    Init_solid_H2O = InitConditions.Init_solid_H2O
+    Init_fluid_H2O = InitConditions.Init_fluid_H2O
+    Init_solid_O= InitConditions.Init_solid_O
+    Init_fluid_O = InitConditions.Init_fluid_O
+    Init_solid_FeO1_5 = InitConditions.Init_solid_FeO1_5
+    Init_solid_FeO = InitConditions.Init_solid_FeO
+    Init_fluid_CO2 = InitConditions.Init_fluid_CO2
+    Init_solid_CO2= InitConditions.Init_solid_CO2
 
     #Oxidation parameters
-    wet_oxid_eff = MC_inputs.interiord
-    MFrac_hydrated = MC_inputs.interiorb
-    dry_oxid_frac = MC_inputs.interiorc 
-    surface_magma_fr = MC_inputs.surface_magma_frac  
+    wet_oxid_eff = MCInputs.interiord
+    MFrac_hydrated = MCInputs.interiorb
+    dry_oxid_frac = MCInputs.interiorc 
+    surface_magma_fr = MCInputs.surface_magma_frac  
 
     #ocean chemistry and weathering parameters
-    ocean_Ca = MC_inputs.ocean_a 
-    omega_ocean = MC_inputs.ocean_b 
-    efold_weath = MC_inputs.ccycle_a
-    alpha_exp = MC_inputs.ccycle_b
-    supp_lim = MC_inputs.supp_lim
+    ocean_Ca = MCInputs.ocean_a 
+    omega_ocean = MCInputs.ocean_b 
+    efold_weath = MCInputs.ccycle_a
+    alpha_exp = MCInputs.ccycle_b
+    supp_lim = MCInputs.supp_lim
 
     #Escape parameters
-    mult = MC_inputs.esc_c 
-    mix_epsilon = MC_inputs.esc_d 
-    Te_input_escape = MC_inputs.Tstrat
+    mult = MCInputs.esc_c 
+    mix_epsilon = MCInputs.esc_d 
+    Te_input_escape = MCInputs.Tstrat
 
     #Interior parameters
-    transition_time_stag = MC_inputs.interiorg
-    visc_offset = MC_inputs.interiora 
-    heatscale = MC_inputs.interiore
+    transition_time_stag = MCInputs.interiorg
+    visc_offset = MCInputs.interiora 
+    heatscale = MCInputs.interiore
 
     #impact parameters
-    imp_coef = MC_inputs.esc_a 
-    tdc = MC_inputs.esc_b 
+    imp_coef = MCInputs.esc_a 
+    tdc = MCInputs.esc_b 
 
 
     MEarth = 5.972e24 #Mass of Earth (kg)
@@ -126,7 +126,7 @@ def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_i
 
     # Define radiogenic inventory
     Uinit = heatscale*22e-9 #Uranium abundance
-    K_over_U = MC_inputs.K_over_U #K/U ratio 
+    K_over_U = MCInputs.K_over_U #K/U ratio 
     core_flow_coefficient = 12e12   #Assumed core heatflow 
 
     K40_over_K = 1.165e-4
@@ -146,9 +146,9 @@ def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_i
     Init_D_to_H = 1.4e-4
     DH_switch = 0.0 # 0 = off, 1 = on
 
-    Max_mantle_H2O = 1.4e21 * MC_inputs.interiorf * (rp**3 - rc**3) / ((6.371e6)**3 - (3.4e6)**3) ## Max mantle water content (kg)
+    Max_mantle_H2O = 1.4e21 * MCInputs.interiorf * (rp**3 - rc**3) / ((6.371e6)**3 - (3.4e6)**3) ## Max mantle water content (kg)
     
-    Start_time = Switch_Inputs.Start_time #Model start time (relative to stellar evolution track)
+    Start_time = SwitchInputs.Start_time #Model start time (relative to stellar evolution track)
     Max_time=np.max([Numerics.tfin0,Numerics.tfin1,Numerics.tfin2,Numerics.tfin3,Numerics.tfin4]) #Model end time
     test_time = np.linspace(Start_time*365*24*60*60,Max_time*365*24*60*60,10000)
     new_t = np.linspace(Start_time/1e9,Max_time/1e9,100000)
@@ -1848,7 +1848,7 @@ def forward_model(Switch_Inputs,Planet_inputs,Init_conditions,Numerics,Stellar_i
 
         pylab.show()
         
-    output_class = Model_outputs(total_time,total_y,FH2O_array,FCO2_array,MH2O_liq,MH2O_crystal,MCO2_liq,Pressre_H2O,CO2_Pressure_array,fO2_array,Mass_O_atm,Mass_O_dissolved,water_frac,Ocean_depth,Max_depth,Ocean_fraction)
+    output_class = ModelOutputs(total_time,total_y,FH2O_array,FCO2_array,MH2O_liq,MH2O_crystal,MCO2_liq,Pressre_H2O,CO2_Pressure_array,fO2_array,Mass_O_atm,Mass_O_dissolved,water_frac,Ocean_depth,Max_depth,Ocean_fraction)
     return output_class
 
 if __name__ == "__main__":

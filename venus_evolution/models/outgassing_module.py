@@ -2,8 +2,6 @@
 import numpy as np
 from scipy import optimize
 import sys
-import pdb
-import random
 from venus_evolution.models.thermodynamics import *
 from numba import jit
 ################################

@@ -15,7 +15,7 @@ Note that default input values in MC_calc.py runs the forward model 720 times (n
 EXPLANATION OF CODE STRUCTURE:
 
 %% MC_calc.py
-This python script perfoms the Monte Carlo calculations to reproduce results from the main text. It also contains nominal parameter ranges, which can be altered to reproduce different scenarios and sensitivity tests. Model outputs are saved as "Venus_ouputs_revisions.npy", whereas corresponding input parameters are saved as "Venus_inputs_revisions.npy". Note that these will be overwritten every time MC_Calc.py finishes running, unless file names are changed manually. These two files are subsequently used by the script "Plot_MC_output.py" to plot results. The file Venus_inputs has dimensions ITERATIONS X 6, where the second dimension contains the six classes that define all input parameters: inputs, Planet_inputs, Init_conditions, Numerics, Stellar_inputs, MC_inputs
+This python script perfoms the Monte Carlo calculations to reproduce results from the main text. It also contains nominal parameter ranges, which can be altered to reproduce different scenarios and sensitivity tests. Model outputs are saved as "Venus_ouputs_revisions.npy", whereas corresponding input parameters are saved as "Venus_inputs_revisions.npy". Note that these will be overwritten every time MC_Calc.py finishes running, unless file names are changed manually. These two files are subsequently used by the script "Plot_MC_output.py" to plot results. The file Venus_inputs has dimensions ITERATIONS X 6, where the second dimension contains the six classes that define all input parameters: inputs, PlanetInputs, InitConditions, Numerics, StellarInputs, MCInputs
 The file Venus_outputs has dimensions ITERATIONS, where each iteration contains a python class with outputs from "Main_code_callable.py":
 total_time, total_y, FH2O_array, FCO2_array, MH2O_liq, MH2O_crystal, MCO2_liq, Pressre_H2O, CO2_Pressure_array, fO2_array, Mass_O_atm, Mass_O_dissolved, water_frac, Ocean_depth, Max_depth, Ocean_fraction
 
@@ -167,9 +167,9 @@ inputs:
     • Ocean_fraction
         ◦ Approximate surface area ocean fraction (parameterized hypsometric curve)
 
-The Monte Carlo parameter file, MCinputs, contains six classes: Switch_Inputs, Planet_inputs, Init_conditions, Numerics, Stellar_inputs, MC_inputs. Each contains a number of input parameters.
+The Monte Carlo parameter file, MCinputs, contains six classes: SwitchInputs, PlanetInputs, InitConditions, Numerics, StellarInputs, MCInputs. Each contains a number of input parameters.
 
-Switch_Inputs
+SwitchInputs
     • print_switch
         ◦ Option for orint outputs, y/n
     • Speedup_flag
@@ -185,7 +185,7 @@ Switch_Inputs
     • Start_time
         ◦ Calculation start time, in yrs (relative to stellar evolution track)
 
-Planet_inputs
+PlanetInputs
     • RE
         ◦ Planet radius (Earth Radii)
     • ME
@@ -203,7 +203,7 @@ Planet_inputs
     • albedoH
         ◦ Hot state bond albedo 
 
-Init_conditions
+InitConditions
     • Init_solid_H2O
         ◦ Endowment of water in solid silicate interior (kg), typically zero for magma ocean initialization
     • Init_fluid_H2O
@@ -245,7 +245,7 @@ Numerics #This is for choosing different maximum timesteps for different portion
     • Tfin4
         ◦ End time for fourth interval (yrs), redundant in nominal model
 
-Stellar_inputs
+StellarInputs
     • tsat_XUV
         ◦ tsat = XUV saturation time (Myr) (see equation 10 in supplemental)
     • Stellar_Mass
@@ -257,7 +257,7 @@ Stellar_inputs
     • Epsilon
         ◦ εlowXUV, low XUV flux escape efficiency 
 
-MC_inputs
+MCInputs
     • Esc_a
         ◦ = Impactor flux coefficient (kg/yr)
     • Esc_b

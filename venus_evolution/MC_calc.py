@@ -14,7 +14,7 @@ if RUNTIME_WARNING is False:
     import warnings
     warnings.filterwarnings("ignore")   
 
-from all_classes import * 
+from venus_evolution.classes import * 
 from main import forward_model
 
 num_runs = 10 # Number of forward model runs
@@ -29,7 +29,7 @@ os.mkdir('switch_garbage3')
 which_planet = "Gliese" # Gliese 12-b
 
 if which_planet=="E":
-    Earth_inputs = Switch_Inputs(print_switch = "n", speedup_flag = "n", start_speed=15e6 , fin_speed=100e6,heating_switch = 0,C_cycle_switch="y",Start_time=10e6)   
+    Earth_inputs = SwitchInputs(print_switch = "n", speedup_flag = "n", start_speed=15e6 , fin_speed=100e6,heating_switch = 0,C_cycle_switch="y",Start_time=10e6)   
     Earth_Numerics = Numerics(total_steps = 3 ,step0 = 50.0, step1=10000.0 , step2=1e6, step3=1e5, step4=-999, tfin0=Earth_inputs.Start_time+10000, tfin1=Earth_inputs.Start_time+10e6, tfin2=4.4e9, tfin3=4.5e9, tfin4 = -999) #standard model runs
 
     ## PARAMETER RANGES ##
@@ -83,7 +83,7 @@ if which_planet=="E":
     surface_magma_frac_array = 10**np.random.uniform(-4,0,num_runs)
 
 elif which_planet=="V":
-    Venus_inputs = Switch_Inputs(print_switch = "n", speedup_flag = "n", start_speed=15e6 , fin_speed=100e6,heating_switch = 0,C_cycle_switch="y",Start_time=30e6)   
+    Venus_inputs = SwitchInputs(print_switch = "n", speedup_flag = "n", start_speed=15e6 , fin_speed=100e6,heating_switch = 0,C_cycle_switch="y",Start_time=30e6)   
     Venus_Numerics = Numerics(total_steps = 2 ,step0 = 50.0, step1=10000.0 , step2=1e6, step3=-999, step4=-999, tfin0=Venus_inputs.Start_time+10000, tfin1=Venus_inputs.Start_time+30e6, tfin2=4.5e9, tfin3=-999, tfin4 = -999)
 
     ## PARAMETER RANGES ##
@@ -141,7 +141,7 @@ elif which_planet=="V":
 
 
 elif which_planet=="Gliese":
-    Venus_inputs = Switch_Inputs(print_switch = "n", speedup_flag = "n", start_speed=15e6 , fin_speed=100e6,heating_switch = 0,C_cycle_switch="y",Start_time=30e6)   
+    Venus_inputs = SwitchInputs(print_switch = "n", speedup_flag = "n", start_speed=15e6 , fin_speed=100e6,heating_switch = 0,C_cycle_switch="y",Start_time=30e6)   
     Venus_Numerics = Numerics(total_steps = 2 ,step0 = 50.0, step1=10000.0 , step2=1e6, step3=-999, step4=-999, tfin0=Venus_inputs.Start_time+10000, tfin1=Venus_inputs.Start_time+30e6, tfin2=4.5e9, tfin3=-999, tfin4 = -999)
 
     ## PARAMETER RANGES ##
@@ -205,25 +205,25 @@ for zzz in inputs:
     ii = zzz
     
     if which_planet=="E":
-        Earth_Planet_inputs = Planet_inputs(RE = 1.0, ME = 1.0, rc=3.4e6, pm=4000.0, Total_Fe_mol_fraction = 0.06, Planet_sep=1.0, albedoC=Albedo_C_range[ii], albedoH=Albedo_H_range[ii])   
-        Earth_Init_conditions = Init_conditions(Init_solid_H2O=0.0, Init_fluid_H2O=init_water[ii] , Init_solid_O=0.0, Init_fluid_O=init_O[ii],Init_solid_FeO1_5 = 0.0, Init_solid_FeO=0.0, Init_solid_CO2=0.0, Init_fluid_CO2 = init_CO2[ii])   
-        Sun_Stellar_inputs = Stellar_inputs(tsat_XUV=tsat_sun_ar[ii], Stellar_Mass=1.0, fsat=fsat_sun, beta0=beta_sun_ar[ii], epsilon=Epsilon_ar[ii] )
-        MC_inputs_ar =  MC_inputs(esc_a=imp_coef[ii], esc_b=tdc[ii], esc_c = mult_ar[ii],esc_d = mix_epsilon_ar[ii],ccycle_a=Tefold[ii] , ccycle_b=alphaexp[ii], supp_lim =suplim_ar[ii], interiora =offset_range[ii], interiorb=MFrac_hydrated_ar[ii],interiorc=dry_ox_frac_ac[ii],interiord = wet_oxid_eff_ar[ii],interiore = heatscale_ar[ii], interiorf = Mantle_H2O_max_ar[ii],interiorg = Stag_trans_ar[ii],ocean_a=ocean_Ca_ar[ii],ocean_b=ocean_Omega_ar[ii],K_over_U = K_over_U_ar[ii])
-        inputs_for_later = [Earth_inputs,Earth_Planet_inputs,Earth_Init_conditions,Earth_Numerics,Sun_Stellar_inputs,MC_inputs_ar]
+        Earth_PlanetInputs = PlanetInputs(RE = 1.0, ME = 1.0, rc=3.4e6, pm=4000.0, Total_Fe_mol_fraction = 0.06, Planet_sep=1.0, albedoC=Albedo_C_range[ii], albedoH=Albedo_H_range[ii])   
+        Earth_InitConditions = InitConditions(Init_solid_H2O=0.0, Init_fluid_H2O=init_water[ii] , Init_solid_O=0.0, Init_fluid_O=init_O[ii],Init_solid_FeO1_5 = 0.0, Init_solid_FeO=0.0, Init_solid_CO2=0.0, Init_fluid_CO2 = init_CO2[ii])   
+        Sun_StellarInputs = StellarInputs(tsat_XUV=tsat_sun_ar[ii], Stellar_Mass=1.0, fsat=fsat_sun, beta0=beta_sun_ar[ii], epsilon=Epsilon_ar[ii] )
+        MCInputs_ar =  MCInputs(esc_a=imp_coef[ii], esc_b=tdc[ii], esc_c = mult_ar[ii],esc_d = mix_epsilon_ar[ii],ccycle_a=Tefold[ii] , ccycle_b=alphaexp[ii], supp_lim =suplim_ar[ii], interiora =offset_range[ii], interiorb=MFrac_hydrated_ar[ii],interiorc=dry_ox_frac_ac[ii],interiord = wet_oxid_eff_ar[ii],interiore = heatscale_ar[ii], interiorf = Mantle_H2O_max_ar[ii],interiorg = Stag_trans_ar[ii],ocean_a=ocean_Ca_ar[ii],ocean_b=ocean_Omega_ar[ii],K_over_U = K_over_U_ar[ii])
+        inputs_for_later = [Earth_inputs,Earth_PlanetInputs,Earth_InitConditions,Earth_Numerics,Sun_StellarInputs,MCInputs_ar]
 
     elif which_planet=="V":    
-        Venus_Planet_inputs = Planet_inputs(RE = 0.9499, ME = 0.8149, rc=3.11e6, pm=3500.0, Total_Fe_mol_fraction = 0.06, Planet_sep=0.7,albedoC=Albedo_C_range[ii], albedoH=Albedo_H_range[ii])   
-        Venus_Init_conditions = Init_conditions(Init_solid_H2O=0.0, Init_fluid_H2O=init_water[ii] , Init_solid_O=0.0, Init_fluid_O=init_O[ii], Init_solid_FeO1_5 = 0.0, Init_solid_FeO=0.0, Init_solid_CO2=0.0, Init_fluid_CO2 = init_CO2[ii])   
-        Sun_Stellar_inputs = Stellar_inputs(tsat_XUV=tsat_sun_ar[ii], Stellar_Mass=1.0, fsat=fsat_sun, beta0=beta_sun_ar[ii], epsilon=Epsilon_ar[ii] )
-        MC_inputs_ar = MC_inputs(esc_a=imp_coef[ii], esc_b=tdc[ii],  esc_c = mult_ar[ii], esc_d = mix_epsilon_ar[ii],ccycle_a=Tefold[ii] , ccycle_b=alphaexp[ii],  supp_lim = suplim_ar[ii], interiora =offset_range[ii], interiorb=MFrac_hydrated_ar[ii],interiorc=dry_ox_frac_ac[ii],interiord = wet_oxid_eff_ar[ii],interiore = heatscale_ar[ii], interiorf = Mantle_H2O_max_ar[ii], interiorg = Stag_trans_ar[ii], ocean_a=ocean_Ca_ar[ii],ocean_b=ocean_Omega_ar[ii],K_over_U = K_over_U_ar[ii],Tstrat=Tstrat_array[ii],surface_magma_frac=surface_magma_frac_array[ii])
-        inputs_for_later = [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar]
+        Venus_PlanetInputs = PlanetInputs(RE = 0.9499, ME = 0.8149, rc=3.11e6, pm=3500.0, Total_Fe_mol_fraction = 0.06, Planet_sep=0.7,albedoC=Albedo_C_range[ii], albedoH=Albedo_H_range[ii])   
+        Venus_InitConditions = InitConditions(Init_solid_H2O=0.0, Init_fluid_H2O=init_water[ii] , Init_solid_O=0.0, Init_fluid_O=init_O[ii], Init_solid_FeO1_5 = 0.0, Init_solid_FeO=0.0, Init_solid_CO2=0.0, Init_fluid_CO2 = init_CO2[ii])   
+        Sun_StellarInputs = StellarInputs(tsat_XUV=tsat_sun_ar[ii], Stellar_Mass=1.0, fsat=fsat_sun, beta0=beta_sun_ar[ii], epsilon=Epsilon_ar[ii] )
+        MCInputs_ar = MCInputs(esc_a=imp_coef[ii], esc_b=tdc[ii],  esc_c = mult_ar[ii], esc_d = mix_epsilon_ar[ii],ccycle_a=Tefold[ii] , ccycle_b=alphaexp[ii],  supp_lim = suplim_ar[ii], interiora =offset_range[ii], interiorb=MFrac_hydrated_ar[ii],interiorc=dry_ox_frac_ac[ii],interiord = wet_oxid_eff_ar[ii],interiore = heatscale_ar[ii], interiorf = Mantle_H2O_max_ar[ii], interiorg = Stag_trans_ar[ii], ocean_a=ocean_Ca_ar[ii],ocean_b=ocean_Omega_ar[ii],K_over_U = K_over_U_ar[ii],Tstrat=Tstrat_array[ii],surface_magma_frac=surface_magma_frac_array[ii])
+        inputs_for_later = [Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar]
     
     elif which_planet=="Gliese":    
-        Venus_Planet_inputs = Planet_inputs(RE = 0.958, ME = 3.87, rc=3.11e6, pm=3500.0, Total_Fe_mol_fraction = 0.06, Planet_sep=0.068,albedoC=Albedo_C_range[ii], albedoH=Albedo_H_range[ii])   
-        Venus_Init_conditions = Init_conditions(Init_solid_H2O=0.0, Init_fluid_H2O=init_water[ii] , Init_solid_O=0.0, Init_fluid_O=init_O[ii], Init_solid_FeO1_5 = 0.0, Init_solid_FeO=0.0, Init_solid_CO2=0.0, Init_fluid_CO2 = init_CO2[ii])   
-        Sun_Stellar_inputs = Stellar_inputs(tsat_XUV=tsat_sun_ar[ii], Stellar_Mass=1.0, fsat=fsat_sun, beta0=beta_sun_ar[ii], epsilon=Epsilon_ar[ii] )
-        MC_inputs_ar = MC_inputs(esc_a=imp_coef[ii], esc_b=tdc[ii],  esc_c = mult_ar[ii], esc_d = mix_epsilon_ar[ii],ccycle_a=Tefold[ii] , ccycle_b=alphaexp[ii],  supp_lim = suplim_ar[ii], interiora =offset_range[ii], interiorb=MFrac_hydrated_ar[ii],interiorc=dry_ox_frac_ac[ii],interiord = wet_oxid_eff_ar[ii],interiore = heatscale_ar[ii], interiorf = Mantle_H2O_max_ar[ii], interiorg = Stag_trans_ar[ii], ocean_a=ocean_Ca_ar[ii],ocean_b=ocean_Omega_ar[ii],K_over_U = K_over_U_ar[ii],Tstrat=Tstrat_array[ii],surface_magma_frac=surface_magma_frac_array[ii])
-        inputs_for_later = [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar]
+        Venus_PlanetInputs = PlanetInputs(RE = 0.958, ME = 3.87, rc=3.11e6, pm=3500.0, Total_Fe_mol_fraction = 0.06, Planet_sep=0.068,albedoC=Albedo_C_range[ii], albedoH=Albedo_H_range[ii])   
+        Venus_InitConditions = InitConditions(Init_solid_H2O=0.0, Init_fluid_H2O=init_water[ii] , Init_solid_O=0.0, Init_fluid_O=init_O[ii], Init_solid_FeO1_5 = 0.0, Init_solid_FeO=0.0, Init_solid_CO2=0.0, Init_fluid_CO2 = init_CO2[ii])   
+        Sun_StellarInputs = StellarInputs(tsat_XUV=tsat_sun_ar[ii], Stellar_Mass=1.0, fsat=fsat_sun, beta0=beta_sun_ar[ii], epsilon=Epsilon_ar[ii] )
+        MCInputs_ar = MCInputs(esc_a=imp_coef[ii], esc_b=tdc[ii],  esc_c = mult_ar[ii], esc_d = mix_epsilon_ar[ii],ccycle_a=Tefold[ii] , ccycle_b=alphaexp[ii],  supp_lim = suplim_ar[ii], interiora =offset_range[ii], interiorb=MFrac_hydrated_ar[ii],interiorc=dry_ox_frac_ac[ii],interiord = wet_oxid_eff_ar[ii],interiore = heatscale_ar[ii], interiorf = Mantle_H2O_max_ar[ii], interiorg = Stag_trans_ar[ii], ocean_a=ocean_Ca_ar[ii],ocean_b=ocean_Omega_ar[ii],K_over_U = K_over_U_ar[ii],Tstrat=Tstrat_array[ii],surface_magma_frac=surface_magma_frac_array[ii])
+        inputs_for_later = [Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar]
 
     sve_name = 'switch_garbage3/inputs4L%d' %ii
     np.save(sve_name,inputs_for_later)
@@ -235,34 +235,34 @@ def processInput(i):
         if which_planet=="E": 
             # print ('starting ',i)
             max_time_attempt = 1.5
-            [Earth_inputs,Earth_Planet_inputs,Earth_Init_conditions,Earth_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
+            [Earth_inputs,Earth_PlanetInputs,Earth_InitConditions,Earth_Numerics,Sun_StellarInputs,MCInputs_ar] = np.load(load_name,allow_pickle=True)
 
-            outs = forward_model(Earth_inputs,Earth_Planet_inputs,Earth_Init_conditions,Earth_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)
+            outs = forward_model(Earth_inputs,Earth_PlanetInputs,Earth_InitConditions,Earth_Numerics,Sun_StellarInputs,MCInputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)
             
         elif which_planet =="V":  
             # print ('starting ',i)
             max_time_attempt = 1.5
-            [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
+            [Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar] = np.load(load_name,allow_pickle=True)
 
-            outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING) 
+            outs = forward_model(Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING) 
             print('success')
 
         
         elif which_planet =="Gliese":  
             # print ('starting ',i)
             max_time_attempt = 1.5
-            [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
+            [Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar] = np.load(load_name,allow_pickle=True)
 
-            outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING) 
+            outs = forward_model(Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING) 
             print('success')
     
     except:
         # print ('try again here')  # try again with slightly different numerical options
         try:
-            [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
+            [Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar] = np.load(load_name,allow_pickle=True)
             Venus_Numerics.total_steps = 7
             max_time_attempt = 0.7
-            outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)   
+            outs = forward_model(Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)   
             print('success')
             if outs.total_time[-1] < 4e9:
                 # print ("Not enough time!")
@@ -270,12 +270,12 @@ def processInput(i):
         except:
             # print ('Third attempt')  # try again with slightly different numerical options
             try:
-                [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
+                [Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar] = np.load(load_name,allow_pickle=True)
                 Venus_Numerics.total_steps = 8
                 max_time_attempt = 0.2
-                Venus_Init_conditions.Init_fluid_H2O = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_H2O
-                Venus_Init_conditions.Init_fluid_CO2 = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_CO2
-                outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)  
+                Venus_InitConditions.Init_fluid_H2O = np.random.uniform(0.98,1.02)*Venus_InitConditions.Init_fluid_H2O
+                Venus_InitConditions.Init_fluid_CO2 = np.random.uniform(0.98,1.02)*Venus_InitConditions.Init_fluid_CO2
+                outs = forward_model(Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)  
                 print('success')
                 if outs.total_time[-1] < 4e9:
                     # print ("Not enough time!")
@@ -283,12 +283,12 @@ def processInput(i):
             except:
                 # print ('Fourth attempt')  # try again with slightly different numerical options
                 try:
-                    [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar] = np.load(load_name,allow_pickle=True)
+                    [Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar] = np.load(load_name,allow_pickle=True)
                     max_time_attempt = 0.1
                     Venus_Numerics.total_steps = 9
-                    Venus_Init_conditions.Init_fluid_H2O = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_H2O
-                    Venus_Init_conditions.Init_fluid_CO2 = np.random.uniform(0.98,1.02)*Venus_Init_conditions.Init_fluid_CO2
-                    outs = forward_model(Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)     
+                    Venus_InitConditions.Init_fluid_H2O = np.random.uniform(0.98,1.02)*Venus_InitConditions.Init_fluid_H2O
+                    Venus_InitConditions.Init_fluid_CO2 = np.random.uniform(0.98,1.02)*Venus_InitConditions.Init_fluid_CO2
+                    outs = forward_model(Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING)     
                     print('success')
                     if outs.total_time[-1] < 4e9:
                         raise Exception      
@@ -298,7 +298,7 @@ def processInput(i):
                     # print ('didint work ',i)
                     outs = []
                     fail_name = 'failed_outputs3/%d' %i
-                    # np.save(fail_name,[Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar])
+                    # np.save(fail_name,[Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar])
        
 
     # print ('done with ',i)
