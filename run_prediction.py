@@ -1,8 +1,13 @@
 import numpy as np
 
 from exo_venus_predict import VenusParameters, run_prediction
+from postprocess import create_predictions
+from plot_outputs_full import plot_outputs_full
 
 params = VenusParameters()
+
+# number of runs
+params.num_runs = 1
 
 # Planet parameters
 params.RE = 0.9499
@@ -21,6 +26,8 @@ params.beta_sun_ar = 1.0/(0.35*np.log10(params.Omega_sun_ar) - 0.98)
 params.beta_sun_ar = 0.86*params.beta_sun_ar 
 params.stellar_mass = 1.0
 
-run_prediction(params)
+output_files, input_files = run_prediction(params)
 
-plot_prediction()
+inputs, MCinputs, plotting_outs, post_process_out = create_predictions(output_files, input_files)
+
+plot_outputs_full(inputs, MCinputs, post_process_out, plotting_outs)

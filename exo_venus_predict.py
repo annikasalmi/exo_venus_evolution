@@ -1,12 +1,13 @@
 '''
-Run MC calculations on the whole things.
+Run MC calculations on the whole thing.
 '''
 import multiprocessing as mp
 import numpy as np
-
+from typing import Tuple
 import os
 from joblib import Parallel, delayed
 import shutil
+
 RUNTIME_WARNING=False #suppress runtime warnings if set to false 
 if RUNTIME_WARNING is False:
     import warnings
@@ -17,6 +18,9 @@ from venus_evolution.main import forward_model
 from venus_evolution.user_tools.tools import VENUS_ROOT
 
 class VenusParameters():
+    '''
+    Hold Venus Parameters in one location.
+    '''
     def __init__(self, num_runs: float = 10):
         self.num_runs = num_runs
         self.num_cores = mp.cpu_count()
@@ -27,7 +31,7 @@ class VenusParameters():
         self.output_path = os.path.join(VENUS_ROOT,'switch_garbage3')
 
         self.VenusInputs = SwitchInputs(print_switch = "n", speedup_flag = "n", start_speed=15e6 , fin_speed=100e6,heating_switch = 0,C_cycle_switch="y",Start_time=30e6)   
-        self.VenusNumerics = Numerics(total_steps = 2 ,step0 = 50.0, step1=10000.0 , step2=1e6, step3=-999, step4=-999, tfin0=Venus_inputs.Start_time+10000, tfin1=Venus_inputs.Start_time+30e6, tfin2=4.5e9, tfin3=-999, tfin4 = -999)
+        self.VenusNumerics = Numerics(total_steps = 2 ,step0 = 50.0, step1=10000.0 , step2=1e6, step3=-999, step4=-999, tfin0=self.VenusInputs.Start_time+10000, tfin1=self.VenusInputs.Start_time+30e6, tfin2=4.5e9, tfin3=-999, tfin4 = -999)
 
         ## PARAMETER RANGES ##
         #initial volatile inventories
@@ -50,6 +54,7 @@ class VenusParameters():
 
         #Albedo parameters
         self.Albedo_C_range = np.random.uniform(0.2,0.7,self.num_runs)
+        self.Albedo_H_range = np.random.uniform(0.0001,0.3,self.num_runs)
         for k in range(0,len(self.Albedo_C_range)):
             if self.Albedo_C_range[k] < self.Albedo_H_range[k]:
                 self.Albedo_H_range[k] = self.Albedo_C_range[k]-1e-5   
@@ -126,7 +131,7 @@ class VenusParameters():
 
         return inputs
 
-    def run_input_files(i):
+    def run_input_files(self, i):
         load_name = 'switch_garbage3/inputs4L%d.npy' %i
         max_time_attempt = 1.5
         [Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar] = np.load(load_name,allow_pickle=True)
@@ -137,29 +142,35 @@ class VenusParameters():
         return outs
 
 def run_prediction(parameters: VenusParameters, 
-                   output_files: str = 'Venus_ouputs_revisions', input_files: str = 'Venus_inputs_revisions'):
+                   output_files: str = 'Venus_ouputs_revisions', 
+                   input_files: str = 'Venus_inputs_revisions') -> Tuple[list, list]:
+    '''
+    Run the prediction file
+    '''
 
-    inputs = VenusParameters.create_input_files()
+    inputs = VenusParameters().create_input_files()
 
-    Everything = Parallel(n_jobs=parameters.num_cores)(delayed(parameters.run_input_files)(i) for i in inputs)
+    for i in inputs:
+        parameters.run_input_files(i)
+
+    # out = Parallel(n_jobs=parameters.num_cores)(delayed(parameters.run_input_files)(i) for i in inputs)
 
     input_mega=[] # Collect input parameters for saving
     everything_to_drop = []
     for kj in range(0,len(inputs)):
         # print ('saving garbage',kj)
-        if type(Everything[kj]) == list:
+        if type(out[kj]) == list:
             everything_to_drop.append(kj)
         else:
             load_name = 'switch_garbage3/inputs4L%d.npy' %kj
             input_mega.append(np.load(load_name,allow_pickle=True))
 
     for drop in everything_to_drop:
-        del Everything[drop]
+        del out[drop]
 
-    np.save('Venus_ouputs_revisions',Everything) 
-    np.save('Venus_inputs_revisions',input_mega) 
+    np.save(output_files,out) 
+    np.save(input_files,input_mega) 
 
     shutil.rmtree('switch_garbage3')
 
-    return Everything, input_mega
-
+    return output_files, input_files

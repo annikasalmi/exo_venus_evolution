@@ -128,8 +128,6 @@ def interpolate_class(saved_outputs):
 
     return outs
 
-
-
 interp_outputs = interpolate_class(inputs)
 inputs = interp_outputs 
  

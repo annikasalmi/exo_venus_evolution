@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 import os
-from user_tools.tools import VENUS_ROOT
+from venus_evolution.user_tools.tools import VENUS_ROOT
 
 def main_sun_fun(time,stellar_mass,tsat_XUV,beta_XUV,fsat):
     

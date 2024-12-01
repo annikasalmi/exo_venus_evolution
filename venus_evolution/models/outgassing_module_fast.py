@@ -2,7 +2,7 @@
 ## Load modules
 import numpy as np
 from numba import jit
-from volc_gases.VolcGases import functions
+from venus_evolution.volc_gases.VolcGases import functions
 ################################
 
 ## The VolcGases outgassing model is described in Wogan et al. (2020; PSJ), and must be installed prior to running this code: https://github.com/Nicholaswogan/VolcGases
