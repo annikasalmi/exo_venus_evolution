@@ -219,7 +219,7 @@ for zzz in inputs:
         inputs_for_later = [Venus_inputs,Venus_Planet_inputs,Venus_Init_conditions,Venus_Numerics,Sun_Stellar_inputs,MC_inputs_ar]
     
     elif which_planet=="Gliese":    
-        Venus_Planet_inputs = Planet_inputs(RE = 0.958, ME = 3.87, rc=3.11e6, pm=3500.0, Total_Fe_mol_fraction = 0.06, Planet_sep=0.7,albedoC=Albedo_C_range[ii], albedoH=Albedo_H_range[ii])   
+        Venus_Planet_inputs = Planet_inputs(RE = 0.958, ME = 3.87, rc=3.11e6, pm=3500.0, Total_Fe_mol_fraction = 0.06, Planet_sep=0.068,albedoC=Albedo_C_range[ii], albedoH=Albedo_H_range[ii])   
         Venus_Init_conditions = Init_conditions(Init_solid_H2O=0.0, Init_fluid_H2O=init_water[ii] , Init_solid_O=0.0, Init_fluid_O=init_O[ii], Init_solid_FeO1_5 = 0.0, Init_solid_FeO=0.0, Init_solid_CO2=0.0, Init_fluid_CO2 = init_CO2[ii])   
         Sun_Stellar_inputs = Stellar_inputs(tsat_XUV=tsat_sun_ar[ii], Stellar_Mass=1.0, fsat=fsat_sun, beta0=beta_sun_ar[ii], epsilon=Epsilon_ar[ii] )
         MC_inputs_ar = MC_inputs(esc_a=imp_coef[ii], esc_b=tdc[ii],  esc_c = mult_ar[ii], esc_d = mix_epsilon_ar[ii],ccycle_a=Tefold[ii] , ccycle_b=alphaexp[ii],  supp_lim = suplim_ar[ii], interiora =offset_range[ii], interiorb=MFrac_hydrated_ar[ii],interiorc=dry_ox_frac_ac[ii],interiord = wet_oxid_eff_ar[ii],interiore = heatscale_ar[ii], interiorf = Mantle_H2O_max_ar[ii], interiorg = Stag_trans_ar[ii], ocean_a=ocean_Ca_ar[ii],ocean_b=ocean_Omega_ar[ii],K_over_U = K_over_U_ar[ii],Tstrat=Tstrat_array[ii],surface_magma_frac=surface_magma_frac_array[ii])
@@ -307,10 +307,17 @@ def processInput(i):
 Everything = Parallel(n_jobs=num_cores)(delayed(processInput)(i) for i in inputs) #Run parallelized code
 
 input_mega=[] # Collect input parameters for saving
+everything_to_drop = []
 for kj in range(0,len(inputs)):
     # print ('saving garbage',kj)
-    load_name = 'switch_garbage3/inputs4L%d.npy' %kj
-    input_mega.append(np.load(load_name,allow_pickle=True))
+    if type(Everything[kj]) == list:
+        everything_to_drop.append(kj)
+    else:
+        load_name = 'switch_garbage3/inputs4L%d.npy' %kj
+        input_mega.append(np.load(load_name,allow_pickle=True))
+
+for drop in everything_to_drop:
+    del Everything[drop]
 
 np.save('Venus_ouputs_revisions',Everything) 
 np.save('Venus_inputs_revisions',input_mega) 
