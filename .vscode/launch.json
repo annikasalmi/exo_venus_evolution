@@ -26,7 +26,14 @@
             "name": "plot_mc",
             "type": "debugpy",
             "request": "launch",
-            "program": "venus_evolution/Plot_MC_output.py",
+            "program": "venus_evolution/plot_mc_output.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "run_prediction",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "run_prediction.py",
             "console": "integratedTerminal"
         }
     ]
