@@ -4,7 +4,7 @@ from scipy import optimize
 import sys
 import pdb
 import random
-from thermodynamics import *
+from venus_evolution.models.thermodynamics import *
 from numba import jit
 ################################
 
