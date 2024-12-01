@@ -41,10 +41,13 @@ def f_for_optim(x,kH2O,Mcrystal,Mliq,rp,yH2O_liq,g,MMW):
 
 #@jit(nopython=True)
 def H2O_partition_function( yH2O_liq,Mliq,Mcrystal,rp,g,kH2O,MMW):  #partition H2O between magma ocean and atmosphere
-    if rp < 6051812 or rp > 6051813:
+    if rp < 6103417 or rp > 6103419:
         a=1
     if (Mliq >0)or(Mliq>0):
-        FH2O = optimize.newton(f_for_optim,0.5,args=(kH2O,Mcrystal,Mliq,rp,yH2O_liq,g,MMW))
+        try:
+            FH2O = optimize.newton(f_for_optim,0.5,args=(kH2O,Mcrystal,Mliq,rp,yH2O_liq,g,MMW))
+        except RuntimeError:
+            return [np.nan,np.nan]
         Pressure_surface = (FH2O / 3.44e-8)**(1.0/0.74)
     else:
         FH2O = 3.44e-8*( yH2O_liq/(4 * (0.018/MMW) * np.pi * (rp**2/g)) ) ** (0.74)

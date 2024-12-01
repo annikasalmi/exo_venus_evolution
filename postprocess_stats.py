@@ -4,7 +4,7 @@ import scipy.stats
 from venus_evolution.models.outgassing_module import *
 from venus_evolution.classes import *
 from venus_evolution.models.other_functions import *
-from postprocess_class import PostProcessOutput
+from postprocess_class import PostProcessOutput, PlottingOutputs
 
 def buffer_fO2(T,Press,redox_buffer): 
     '''
@@ -39,8 +39,15 @@ def get_fO2(XFe2O3_over_XFeO,P,T,Total_Fe):
     fO2 =  np.exp( (np.log(XFe2O3_over_XFeO) + 1.828 * Total_Fe -(terms1+terms2+terms3+terms4) )/0.196)
     return fO2  
 
-def post_process(inputs, MCinputs, g, rp):
+def post_process(inputs, MCinputs, plot_outs: PlottingOutputs):
     out = PostProcessOutput()
+
+    rc = MCinputs[0][1].rc
+    mantle_mass = 0.0
+
+    rp = 6371000*MCinputs[0][1].RE
+    alpha = 2e-5
+    k = 4.2 
 
     N2_Pressure = 1e5 # Do not change
     x = 0.01550152865954013
@@ -65,10 +72,13 @@ def post_process(inputs, MCinputs, g, rp):
         out.Max_depth.append(inputs[k].Max_depth )
         out.Ocean_fraction.append(inputs[k].Ocean_fraction )
 
+    for i in np.arange(0,10):
+        print(len(out.FH2O_array[i]))
+
     [int1,int2,int3] = [2.5,50,97.5]
-    out.confidence_y=scipy.stats.scoreatpercentile(out.total_y ,[int1,int2,int3], 
+    out.confidence_y=scipy.stats.scoreatpercentile(out.total_y, [int1,int2,int3], 
                                                    interpolation_method='fraction',axis=0)
-    out.confidence_FH2O = scipy.stats.scoreatpercentile(out.FH2O_array ,[int1,int2,int3], 
+    out.confidence_FH2O = scipy.stats.scoreatpercentile(out.FH2O_array, [int1,int2,int3], 
                                                         interpolation_method='fraction',axis=0)
     out.confidence_FCO2 = scipy.stats.scoreatpercentile(out.FCO2_array ,[int1,int2,int3], 
                                                         interpolation_method='fraction',axis=0)
@@ -95,13 +105,6 @@ def post_process(inputs, MCinputs, g, rp):
                                                              interpolation_method='fraction',axis=0)
     out.confidence_Ocean_fraction = scipy.stats.scoreatpercentile(out.Ocean_fraction ,[int1,int2,int3], 
                                                                   interpolation_method='fraction',axis=0)
-
-    rc = MCinputs[0][1].rc
-    mantle_mass = 0.0
-
-    rp = 6371000*MCinputs[0][1].RE
-    alpha = 2e-5
-    k = 4.2 
 
     out.Melt_volume = np.copy(out.total_time)
     out.Plate_velocity = np.copy(out.total_time)
@@ -136,9 +139,13 @@ def post_process(inputs, MCinputs, g, rp):
         out.mantle_CO2_fraction.append(inputs[k].Ocean_fraction*0 ) 
         out.mantle_H2O_fraction.append(inputs[k].Ocean_fraction*0 )
 
-        ocean_start_index = np.min(np.where(inputs[k].Ocean_depth>0))
-        max_T_runaway = np.max(out.total_y[k][8][ocean_start_index:])
-        out.Max_runaway_temperatures.append(max_T_runaway)
+        ocean_depth_locs = np.where(inputs[k].Ocean_depth>0)
+        if len(ocean_depth_locs) > 1:
+            ocean_start_index = np.min(np.where(inputs[k].Ocean_depth>0))
+            max_T_runaway = np.max(out.total_y[k][8][ocean_start_index:])
+            out.Max_runaway_temperatures.append(max_T_runaway)
+        else:
+            out.Max_runaway_temperatures.append(np.nan)
 
         for i in range(0,len(out.total_time[k])):
             out.mantle_H2O_fraction[k][i] = out.total_y[k][0][i]/(out.total_y[k][0][i]+out.total_y[k][1][i])
@@ -156,20 +163,21 @@ def post_process(inputs, MCinputs, g, rp):
             out.total_iron[k][i] = iron3+iron2
             out.iron_ratio[k][i] = iron3/iron2
             out.f_O2_mantle[k][i] = get_fO2(0.5*iron3/iron2,Pressure_surface,
-                                            out.total_y[k][7][i],out.Total_Fe_array[k])
+                                            out.total_y[k][7][i],plot_outs.Total_Fe_array[k])
             T_for_melting = float(out.total_y[k][7][i])
             Poverburd = out.fO2_array[k][i] + out.Pressre_H2O[k][i] + out.CO2_Pressure_array[k][i] + N2_Pressure  
             alpha = 2e-5
             cp = 1.2e3 
             pm = 4000.0
-            rdck = optimize.minimize(find_r,x0=float(out.total_y[k][2][i]),args = (T_for_melting,alpha,g,cp,pm,rp,
+            rdck = optimize.minimize(find_r,x0=float(out.total_y[k][2][i]),args = (T_for_melting,alpha,
+                                                                                   plot_outs.g,cp,pm,rp,
                                                                                    float(Poverburd),0,0.0))
             rad_check = float(rdck.x[0])
             if rad_check>rp:
                 rad_check = rp
             rlid = rp -out.total_y[k][26][i]
-            [actual_phi_surf_melt,actual_visc,Va] = temp_meltfrac(0.99998*rad_check,rp,alpha,pm,T_for_melting,cp,g,
-                                                                  Poverburd,0,rlid)
+            [actual_phi_surf_melt,actual_visc,Va] = temp_meltfrac(0.99998*rad_check,rp,alpha,pm,T_for_melting,cp,
+                                                                  plot_outs.g,Poverburd,0,rlid)
             out.actual_phi_surf_melt_ar[k][i]= actual_phi_surf_melt
             F = out.actual_phi_surf_melt_ar[k][i]
             mantle_mass = (4./3. * np.pi * pm * (rp**3 - rc**3))
@@ -217,7 +225,7 @@ def post_process(inputs, MCinputs, g, rp):
             Pressure_surface = out.fO2_array[k][i] + out.Pressre_H2O[k][i]*out.water_frac[k][i] + \
                                             out.CO2_Pressure_array[k][i] + N2_Pressure  
             melt_mass =out.total_y[k][25][i]*pm*1000 
-            Tsolidus = sol_liq(rp,g,pm,rp,0.0,0.0)
+            Tsolidus = sol_liq(rp,plot_outs.g,pm,rp,0.0,0.0)
             if (0.5*out.iron_ratio[k][i]>0)and(melt_mass>0)and(out.actual_phi_surf_melt_ar[k][i])>0:
                 try:
                     [F_H2O,F_CO2,F_H2,F_CO,F_CH4,F_SO2,F_H2S,F_S2,O2_consumption] = \
@@ -247,14 +255,21 @@ def post_process(inputs, MCinputs, g, rp):
     out.HT_duration = np.array(out.HT_duration)
     out.Late_melt_production = np.array(out.Late_melt_production)
 
-    out.conf_DH_atmo = scipy.stats.scoreatpercentile(out.DH_atmo ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.conf_DH_solid = scipy.stats.scoreatpercentile(out.DH_solid ,[int1,int2,int3], interpolation_method='fraction',axis=0)
+    out.conf_DH_atmo = scipy.stats.scoreatpercentile(out.DH_atmo ,[int1,int2,int3], 
+                                                     interpolation_method='fraction',axis=0)
+    out.conf_DH_solid = scipy.stats.scoreatpercentile(out.DH_solid ,[int1,int2,int3], 
+                                                      interpolation_method='fraction',axis=0)
 
-    out.conf_HT_duration = scipy.stats.scoreatpercentile(out.HT_duration ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.conf_HTmax = scipy.stats.scoreatpercentile(out.HTmax ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.conf_HTmin = scipy.stats.scoreatpercentile(out.HTmin ,[int1,int2,int3], interpolation_method='fraction',axis=0)
+    out.conf_HT_duration = scipy.stats.scoreatpercentile(out.HT_duration ,[int1,int2,int3], 
+                                                         interpolation_method='fraction',axis=0)
+    out.conf_HTmax = scipy.stats.scoreatpercentile(out.HTmax ,[int1,int2,int3], 
+                                                   interpolation_method='fraction',axis=0)
+    out.conf_HTmin = scipy.stats.scoreatpercentile(out.HTmin ,[int1,int2,int3], 
+                                                   interpolation_method='fraction',axis=0)
 
-    out.conf_Late_melt_production = scipy.stats.scoreatpercentile(365*24*60*60*out.Late_melt_production/1e9 ,[int1,int2,int3], interpolation_method='fraction',axis=0)
+    out.conf_Late_melt_production = scipy.stats.scoreatpercentile(365*24*60*60*out.Late_melt_production/1e9,
+                                                                  [int1,int2,int3], interpolation_method='fraction',
+                                                                  axis=0)
 
     out.four_percentilesa = scipy.stats.percentileofscore(out.Max_runaway_temperatures ,700)
     out.four_percentilesb = scipy.stats.percentileofscore(out.Max_runaway_temperatures ,800)
@@ -262,19 +277,30 @@ def post_process(inputs, MCinputs, g, rp):
     out.four_percentilesd = scipy.stats.percentileofscore(out.Max_runaway_temperatures,1000)
 
     ## Mantle and magma ocean redox relative to FMQ:
-    out.confidence_mantle_CO2_fraction = scipy.stats.scoreatpercentile(out.mantle_CO2_fraction ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.confidence_mantle_H2O_fraction = scipy.stats.scoreatpercentile(out.mantle_H2O_fraction ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.confidence_f_O2_FMQ = scipy.stats.scoreatpercentile(out.f_O2_FMQ ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.confidence_f_O2_IW = scipy.stats.scoreatpercentile(out.f_O2_IW ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.confidence_f_O2_MH = scipy.stats.scoreatpercentile(out.f_O2_MH ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.confidence_f_O2_mantle = scipy.stats.scoreatpercentile(out.f_O2_mantle ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.confidence_iron_ratio = scipy.stats.scoreatpercentile(out.iron_ratio ,[int1,int2,int3], interpolation_method='fraction',axis=0)
-    out.confidence_f_O2_relative_FMQ = scipy.stats.scoreatpercentile(np.log10(out.f_O2_mantle) - np.log10(out.f_O2_FMQ) ,[int1,int2,int3], interpolation_method='fraction',axis=0)
+    out.confidence_mantle_CO2_fraction = scipy.stats.scoreatpercentile(out.mantle_CO2_fraction,
+                                                                       [int1,int2,int3],
+                                                                       interpolation_method='fraction',axis=0)
+    out.confidence_mantle_H2O_fraction = scipy.stats.scoreatpercentile(out.mantle_H2O_fraction,
+                                                                       [int1,int2,int3],
+                                                                       interpolation_method='fraction',axis=0)
+    out.confidence_f_O2_FMQ = scipy.stats.scoreatpercentile(out.f_O2_FMQ ,[int1,int2,int3],
+                                                            interpolation_method='fraction',axis=0)
+    out.confidence_f_O2_IW = scipy.stats.scoreatpercentile(out.f_O2_IW ,[int1,int2,int3],
+                                                           interpolation_method='fraction',axis=0)
+    out.confidence_f_O2_MH = scipy.stats.scoreatpercentile(out.f_O2_MH ,[int1,int2,int3],
+                                                           interpolation_method='fraction',axis=0)
+    out.confidence_f_O2_mantle = scipy.stats.scoreatpercentile(out.f_O2_mantle ,[int1,int2,int3],
+                                                               interpolation_method='fraction',axis=0)
+    out.confidence_iron_ratio = scipy.stats.scoreatpercentile(out.iron_ratio ,[int1,int2,int3],
+                                                              interpolation_method='fraction',axis=0)
+    out.confidence_f_O2_relative_FMQ = scipy.stats.scoreatpercentile(np.log10(out.f_O2_mantle) - np.log10(out.f_O2_FMQ),
+                                                                     [int1,int2,int3], 
+                                                                     interpolation_method='fraction', axis=0)
                         
     
-    Melt_volume = 365*24*60*60*Melt_volume/1e9
-    out.Melt_volumeCOPY = np.copy(Melt_volume)
-    out.confidence_melt=scipy.stats.scoreatpercentile(Melt_volume ,[int1,int2,int3], interpolation_method='fraction',axis=0)
+    out.Melt_volume = 365*24*60*60*out.Melt_volume/1e9
+    out.Melt_volumeCOPY = np.copy(out.Melt_volume)
+    out.confidence_melt=scipy.stats.scoreatpercentile(out.Melt_volume,[int1,int2,int3], interpolation_method='fraction',axis=0)
     out.confidence_velocity =  scipy.stats.scoreatpercentile(out.Plate_velocity ,[int1,int2,int3], interpolation_method='fraction',axis=0)
 
     return out

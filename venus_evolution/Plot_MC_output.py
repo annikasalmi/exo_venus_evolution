@@ -3,14 +3,17 @@ import pylab
 from scipy.integrate import *
 from scipy.interpolate import interp1d
 from scipy import optimize
+import os
 
 RUNTIME_WARNING=False #suppress runtime warnings if set to false 
 if RUNTIME_WARNING is False:
     import warnings
     warnings.filterwarnings("ignore")  
 
-from venus_evolution.classes import *
-from venus_evolution.models.other_functions import *
+from classes import *
+from models.other_functions import *
+from models.outgassing_module import *
+
 new_inputs = [] #actually ouputs
 inputs_for_MC=[]
 Total_Fe_array = []
@@ -55,8 +58,8 @@ def use_one_output(inputs,MCinputs):
 N2_Pressure = 1e5 # Do not change
 
 ### Load outputs and inputs. Note it is possible to load multiple output files and process them all at once
-inputs = np.load('Venus_ouputs_revisions_gliese_1.npy',allow_pickle = True)
-MCinputs = np.load('Venus_inputs_revisions_gliese_1.npy',allow_pickle = True)
+inputs = np.load(os.path.join('outputs','Venus_ouputs_revisions_ex2.npy'),allow_pickle = True)
+MCinputs = np.load(os.path.join('outputs','Venus_inputs_revisions_ex2.npy'),allow_pickle = True)
 use_one_output(inputs,MCinputs)
 
 #Pause here to check number of successful model runs etc. Type 'c' to continue.
@@ -65,13 +68,16 @@ if len(inputs) == 0:
 inputs = np.array(new_inputs)
 
 def interpolate_class(saved_outputs):
+    '''
+    Interpolate the data results
+    '''
     outs=[]
-    for i in range(0,len(saved_outputs)):
+    for i, _ in enumerate(saved_outputs):
 
         time_starts = np.min([np.where(saved_outputs[i].total_time>1)])-1
-        time = saved_outputs[i].total_time[time_starts:]
+        time = np.round(saved_outputs[i].total_time[time_starts:], decimals = 5)
         num_t_elements = 1000 
-        new_time = np.logspace(np.log10(np.min(time[:])),np.max([np.log10(time[:-1])]),num_t_elements)
+        new_time = np.round(np.logspace(np.log10(np.min(time[:])),np.max([np.log10(time[:-1])]),num_t_elements), decimals = 5)
         num_y = 56
         new_total_y = np.zeros(shape=(num_y,len(new_time)))
         for k in range(0,num_y):
@@ -259,7 +265,6 @@ Late_melt_production = []
 
 mantle_CO2_fraction = []
 mantle_H2O_fraction=[]
-from venus_evolution.models.outgassing_module import *
 
 for k in range(0,len(inputs)):
     f_O2_FMQ.append(inputs[k].Ocean_fraction*0 )

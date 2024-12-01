@@ -2,7 +2,10 @@
 import numpy as np
 from scipy.integrate import *
 from numba import jit
-from venus_evolution.user_tools.tools import VENUS_ROOT
+try:
+    from venus_evolution.user_tools.tools import VENUS_ROOT
+except ModuleNotFoundError:
+    from user_tools.tools import VENUS_ROOT
 import os
 #################################
    

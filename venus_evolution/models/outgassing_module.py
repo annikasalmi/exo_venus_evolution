@@ -2,7 +2,10 @@
 import numpy as np
 from scipy import optimize
 import sys
-from venus_evolution.models.thermodynamics import *
+try:
+    from venus_evolution.models.thermodynamics import *
+except ModuleNotFoundError:
+    from models.thermodynamics import *
 from numba import jit
 ################################
 

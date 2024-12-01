@@ -6,7 +6,7 @@ from scipy.integrate import cumtrapz
 from postprocess_class import PostProcessOutput, PlottingOutputs
 from venus_evolution.models.other_functions import sol_liq
 
-def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: PlottingOutputs):
+def plot_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: PlottingOutputs):
     '''
     Plot all possible outputs
     '''
@@ -79,7 +79,7 @@ def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: Plott
     pylab.subplot(4,3,3)
     pylab.ylabel("Pressure (bar)")
     for k in range(0,len(inputs)):
-        pylab.loglog(out.total_time[k],out.Mass_O_atm[k]*g/(4*np.pi*(0.032/out.total_y[k][24])*plot_outs.rp**2*1e5),
+        pylab.loglog(out.total_time[k],out.Mass_O_atm[k]*plot_outs.g/(4*np.pi*(0.032/out.total_y[k][24])*plot_outs.rp**2*1e5),
                      'g',label='O2'if k == 0 else "")
         pylab.loglog(out.total_time[k],out.water_frac[k]*out.Pressre_H2O[k]/1e5,
                      'b',label='H2O'if k == 0 else "")
@@ -214,8 +214,8 @@ def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: Plott
     surflabel="Surface, T$_{surf}$"
     pylab.semilogx(out.total_time[0],out.confidence_y[1][8],'r', label=surflabel)
     pylab.fill_between(out.total_time[0],out.confidence_y[0][8], out.confidence_y[2][8], color='red', alpha=0.4)  
-    sol_val = sol_liq(plot_outs.rp,g,4000,plot_outs.rp,0.0,0.0)
-    sol_val2 = sol_liq(plot_outs.rp,g,4000,plot_outs.rp,3e9,0.0)
+    sol_val = sol_liq(plot_outs.rp,plot_outs.g,4000,plot_outs.rp,0.0,0.0)
+    sol_val2 = sol_liq(plot_outs.rp,plot_outs.g,4000,plot_outs.rp,3e9,0.0)
     modlabel="Modern T$_{surf}$"
     pylab.semilogx(out.total_time[0],0*out.confidence_y[1][8]+737,'r--', label=modlabel)
     pylab.ylabel("Temperature (K)")
@@ -236,11 +236,11 @@ def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: Plott
     pylab.ylabel("Pressure (bar)")
     O2_label = 'O$_2$'
     pylab.loglog(out.total_time[0], 
-                 out.confidence_Mass_O_atm[1]*g/(4*np.pi*(0.032/out.total_y[k][24])*plot_outs.rp**2*1e5),
+                 out.confidence_Mass_O_atm[1]*plot_outs.g/(4*np.pi*(0.032/out.total_y[k][24])*plot_outs.rp**2*1e5),
                  'g',label=O2_label)
     pylab.fill_between(out.total_time[0], 
-                       out.confidence_Mass_O_atm[0]*g/(4*np.pi*(0.032/out.total_y[k][24])*plot_outs.rp**2*1e5),
-                       out.confidence_Mass_O_atm[2]*g/(4*np.pi*(0.032/out.total_y[k][24])*plot_outs.rp**2*1e5), color='green', alpha=0.4)  
+                       out.confidence_Mass_O_atm[0]*plot_outs.g/(4*np.pi*(0.032/out.total_y[k][24])*plot_outs.rp**2*1e5),
+                       out.confidence_Mass_O_atm[2]*plot_outs.g/(4*np.pi*(0.032/out.total_y[k][24])*plot_outs.rp**2*1e5), color='green', alpha=0.4)  
     H2O_label = 'H$_2$O'
     pylab.loglog(out.total_time[0],
                  out.confidence_water_frac[1]*out.confidence_Pressre_H2O[1]/1e5,'b',label=H2O_label)
@@ -597,7 +597,7 @@ def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: Plott
 
 
     for k in range(0,len(inputs)):
-        addO2 = out.Mass_O_atm[k][-1]*g/(4*np.pi*(0.032/out.total_y[k][24][-1])*plot_outs.rp**2*1e5)
+        addO2 = out.Mass_O_atm[k][-1]*plot_outs.g/(4*np.pi*(0.032/out.total_y[k][24][-1])*plot_outs.rp**2*1e5)
         if (addO2 <= 0 ) or np.isnan(addO2):
             addO2 = 1e-8
         addH2O = out.Pressre_H2O[k][-1]/1e5
@@ -727,7 +727,7 @@ def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: Plott
     pylab.ylabel('Final O$_2$ (bar)')
 
     pylab.subplot(2,2,3)
-    pylab.loglog(np.array(init_H2O_ar)/1.4e21,np.array(init_CO2_ar)*g/(1e5*4*np.pi*plot_outs.rp**2),'.')
+    pylab.loglog(np.array(init_H2O_ar)/1.4e21,np.array(init_CO2_ar)*plot_outs.g/(1e5*4*np.pi*plot_outs.rp**2),'.')
     pylab.xlabel('Initial H$_2$O inventory (Earth oceans)')
     pylab.ylabel('Initial CO$_2$ inventory (bar)')
 
@@ -779,7 +779,7 @@ def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: Plott
 
     pylab.figure()
     pylab.subplot(2,3,1)
-    pylab.loglog(np.array(init_H2O_ar)/1.4e21,np.array(init_CO2_ar)*g/(1e5*4*np.pi*plot_outs.rp**2),'.')
+    pylab.loglog(np.array(init_H2O_ar)/1.4e21,np.array(init_CO2_ar)*plot_outs.g/(1e5*4*np.pi*plot_outs.rp**2),'.')
     pylab.xlabel('Initial H2O inventory (Earth oceans)')
     pylab.ylabel('Initial CO2 inventory (bar)')
 
@@ -873,7 +873,7 @@ def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: Plott
     pylab.ylabel('Final O$_2$ (bar)')
 
     pylab.subplot(1,3,3)
-    pylab.loglog(np.array(init_H2O_ar)/1.4e21,np.array(init_CO2_ar)*g/(1e5*4*np.pi*plot_outs.rp**2),'.')
+    pylab.loglog(np.array(init_H2O_ar)/1.4e21,np.array(init_CO2_ar)*plot_outs.g/(1e5*4*np.pi*plot_outs.rp**2),'.')
     pylab.xlabel('Initial H$_2$O inventory (Earth oceans)')
     pylab.ylabel('Initial CO$_2$ inventory (bar)')
 
@@ -972,7 +972,7 @@ def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: Plott
     for k in range(0,len(inputs)):
         pylab.semilogx(out.total_time[k],out.total_y[k][1],'r',label='Mass H2O, magma ocean + atmo'  if k == 0 else "")
         pylab.semilogx(out.total_time[k],out.MH2O_liq[k],'b',label='Mass H2O, magma ocean'  if k == 0 else "")
-        pylab.semilogx(out.total_time[k],out.Pressre_H2O[k] *4 * np.pi * (0.018/out.total_y[k][24])* (plot_outs.rp**2/g) ,label='Mass H2O atmosphere'  if k == 0 else "")
+        pylab.semilogx(out.total_time[k],out.Pressre_H2O[k] *4 * np.pi * (0.018/out.total_y[k][24])* (plot_outs.rp**2/plot_outs.g) ,label='Mass H2O atmosphere'  if k == 0 else "")
     pylab.subplot(6,1,3)
     for k in range(0,len(inputs)):
         pylab.ylabel('H2O fraction solid')
@@ -992,4 +992,4 @@ def plot_outputs_full(inputs, MCInputs, out: PostProcessOutput, plot_outs: Plott
     pylab.ylabel('H2O fraction solid')
     pylab.xlabel('Time (yrs)')
     pylab.show()
-
+    a=1

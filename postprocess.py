@@ -1,8 +1,7 @@
 import numpy as np
-import pylab
+import os
 from scipy.integrate import *
 from scipy.interpolate import interp1d
-from scipy import optimize
 
 RUNTIME_WARNING=False #suppress runtime warnings if set to false 
 if RUNTIME_WARNING is False:
@@ -13,6 +12,7 @@ from venus_evolution.classes import *
 from venus_evolution.models.other_functions import *
 from postprocess_stats import post_process
 from postprocess_class import PlottingOutputs
+from venus_evolution.user_tools.tools import VENUS_ROOT
 
 def use_one_output(inputs: list, MCinputs: list) -> PlottingOutputs:
     '''
@@ -108,15 +108,18 @@ def interpolate_class(saved_outputs):
         outs.append(output_class)
     return outs
     
-def create_predictions(output_file: str = 'Venus_ouputs_revisions_gliese_1.npy', 
+def postprocess(output_file: str = 'Venus_ouputs_revisions_gliese_1.npy', 
                        input_file: str = 'Venus_inputs_revisions_gliese_1.npy'):
     '''
     Create predicted results
     '''
-
     ### Load outputs and inputs. Note it is possible to load multiple output files and process them all at once
-    inputs = np.load(output_file,allow_pickle = True)
-    MCinputs = np.load(input_file,allow_pickle = True)
+    if '.npy' not in output_file:
+        output_file = output_file + '.npy'
+    if '.npy' not in input_file:
+        input_file = input_file + '.npy'
+    inputs = np.load(os.path.join('outputs',output_file),allow_pickle = True)
+    MCinputs = np.load(os.path.join('outputs',input_file),allow_pickle = True)
     plotting_outs = use_one_output(inputs,MCinputs)
 
     #Pause here to check number of successful model runs etc. Type 'c' to continue.
@@ -124,7 +127,7 @@ def create_predictions(output_file: str = 'Venus_ouputs_revisions_gliese_1.npy',
         raise ValueError('No new inputs found for some reason during modelling.')
     inputs = np.array(plotting_outs.new_inputs)
 
-    post_process_out = post_process(inputs, MCinputs, plotting_outs.g, plotting_outs.rp)
+    post_process_out = post_process(inputs, MCinputs, plotting_outs)
 
     interp_outputs = interpolate_class(inputs)
     inputs = interp_outputs 

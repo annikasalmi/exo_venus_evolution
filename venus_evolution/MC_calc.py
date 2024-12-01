@@ -14,10 +14,10 @@ if RUNTIME_WARNING is False:
     import warnings
     warnings.filterwarnings("ignore")   
 
-from venus_evolution.classes import * 
-from main import forward_model
+from classes import * 
+from forward_model import forward_model
 
-num_runs = 10 # Number of forward model runs
+num_runs = 20 # Number of forward model runs
 
 num_cores = mp.cpu_count() 
 if os.path.exists('switch_garbage3'):
@@ -319,8 +319,8 @@ for kj in range(0,len(inputs)):
 for drop in everything_to_drop:
     del Everything[drop]
 
-np.save('Venus_ouputs_revisions',Everything) 
-np.save('Venus_inputs_revisions',input_mega) 
+np.save(os.path.join('outputs','Venus_ouputs_revisions_ex2'),Everything) 
+np.save(os.path.join('outputs','Venus_inputs_revisions_ex2'),input_mega) 
 
 shutil.rmtree('switch_garbage3')
 

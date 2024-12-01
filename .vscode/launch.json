@@ -9,10 +9,10 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "main.py",
+            "name": "forward_model",
             "type": "debugpy",
             "request": "launch",
-            "program": "venus_evolution/main.py",
+            "program": "venus_evolution/forward_model.py",
             "console": "integratedTerminal"
         },
         {
@@ -27,7 +27,8 @@
             "type": "debugpy",
             "request": "launch",
             "program": "venus_evolution/plot_mc_output.py",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
         },
         {
             "name": "run_prediction",

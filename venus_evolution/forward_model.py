@@ -9,21 +9,38 @@ from scipy.interpolate import interp1d
 from scipy import optimize
 import scipy.optimize 
 
-from venus_evolution.models.radiative_functions import *
-from venus_evolution.models.other_functions import *
-from venus_evolution.models.stellar_funs import main_sun_fun
-from venus_evolution.models.carbon_cycle_model import *
-from venus_evolution.models.numba_nelder_mead import nelder_mead
-from venus_evolution.models.escape_functions import *
-from venus_evolution.classes import *
-#from outgassing_module import *
-from venus_evolution.models.outgassing_module_fast import *
-from venus_evolution.models.albedo_module import *
-from venus_evolution.models.thermodynamic_variables import *
+try:
+        
+    from venus_evolution.models.radiative_functions import *
+    from venus_evolution.models.other_functions import *
+    from venus_evolution.models.stellar_funs import main_sun_fun
+    from venus_evolution.models.carbon_cycle_model import *
+    from venus_evolution.models.numba_nelder_mead import nelder_mead
+    from venus_evolution.models.escape_functions import *
+    from venus_evolution.classes import *
+    #from outgassing_module import *
+    from venus_evolution.models.outgassing_module_fast import *
+    from venus_evolution.models.albedo_module import *
+    from venus_evolution.models.thermodynamic_variables import *
+except ModuleNotFoundError:
+    
+    from models.radiative_functions import *
+    from models.other_functions import *
+    from models.stellar_funs import main_sun_fun
+    from models.carbon_cycle_model import *
+    from models.numba_nelder_mead import nelder_mead
+    from models.escape_functions import *
+    from classes import *
+    #from outgassing_module import *
+    from models.outgassing_module_fast import *
+    from models.albedo_module import *
+    from models.thermodynamic_variables import *
 import time
 from numba import jit
-from venus_evolution.user_tools.tools import VENUS_ROOT
-#####################
+try:
+    from venus_evolution.user_tools.tools import VENUS_ROOT
+except ModuleNotFoundError:
+    from user_tools.tools import VENUS_ROOT#####################
 
 def forward_model(SwitchInputs,PlanetInputs,InitConditions,Numerics,StellarInputs,MCInputs,max_time_attempt,runtime_warning=True):
 
@@ -346,6 +363,9 @@ def forward_model(SwitchInputs,PlanetInputs,InitConditions,Numerics,StellarInput
             Mcrystal = (1-actual_phi_surf)*Mliq
             phi_final = actual_phi_surf
             [FH2O,H2O_Pressure_surface] = H2O_partition_function( y[1],Mliq,Mcrystal,rp,g,kH2O,y[24])
+            if np.isnan(FH2O) or np.isnan(H2O_Pressure_surface):
+                return [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+                
             [FCO2,CO2_Pressure_surface] = CO2_partition_function( y[12],Mliq,Mcrystal,rp,g,kCO2,y[24]) #molten so can ignore aqueous CO2
             AB = AB_fun(float(y[8]),H2O_Pressure_surface,float(y[1]+y[4]+y[12]),albedoC,albedoH)
 
@@ -381,6 +401,8 @@ def forward_model(SwitchInputs,PlanetInputs,InitConditions,Numerics,StellarInput
 
                     lower = 180.0
                     upper = float(y[7]+TMoffset)+10
+                    if lower>upper:
+                        return [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
 
                     ace1b=scipy.optimize.minimize_scalar(funTs_scalar, args=(float(y[7]+TMoffset),ll,visc,beta,Te_input,ASR_input,H2O_Pressure_surface,CO2_Pressure_surface,ocean_CO3,float(y[24]),float(y[22])),bounds=[lower,upper],tol=1e-10,method='bounded',options={'maxiter':1000,'xatol':1e-10})
 
@@ -1424,7 +1446,10 @@ def forward_model(SwitchInputs,PlanetInputs,InitConditions,Numerics,StellarInput
     ### Initialize forward model
 
     init_fluid_HDO = 2*Init_D_to_H * Init_fluid_H2O*0.019/0.018
-    ICs = [Init_solid_H2O,Init_fluid_H2O, rc, Init_solid_O,Init_fluid_O,Init_solid_FeO1_5,Init_solid_FeO,4000,3999,0.0,0.0,0.0,Init_fluid_CO2,Init_solid_CO2,0.0,0.0,3999.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.044,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,init40K,initAr40,0.0,0.0,0.0,0.0,init_fluid_HDO,0.0,init_U238,init_U235,init_Th,0.0,0.0,0.0,init_He_mantle,init_He_atmo,0.5,0.0,0.0,0.0,0.0] 
+    ICs = [Init_solid_H2O,Init_fluid_H2O, rc, Init_solid_O,Init_fluid_O,Init_solid_FeO1_5,Init_solid_FeO,4000,3999,
+           0.0,0.0,0.0,Init_fluid_CO2,Init_solid_CO2,0.0,0.0,3999.5,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.044,0.0,0.0,0.0,1.0,
+           0.0,0.0,0.0,0.0,0.0,0.0,init40K,initAr40,0.0,0.0,0.0,0.0,init_fluid_HDO,0.0,init_U238,init_U235,init_Th,0.0,
+           0.0,0.0,init_He_mantle,init_He_atmo,0.5,0.0,0.0,0.0,0.0] 
 
     ### Various numerical inputs 
     if Numerics.total_steps==3:
@@ -1437,7 +1462,7 @@ def forward_model(SwitchInputs,PlanetInputs,InitConditions,Numerics,StellarInput
         total_y = np.concatenate((sol.y,sol2.y,sol3.y,sol4.y),axis=1)
     elif Numerics.total_steps ==2: ### works better for Venus maybe?
         sol = solve_ivp(system_of_equations, [Start_time*365*24*60*60, Numerics.tfin0*365*24*60*60], ICs,dense_output=True, method = 'RK45',max_step=Numerics.step0*365*24*60*60)#,max_step=365*24*60*60*1e3) # FIX REASONABLE ICs?
-        sol2 = solve_ivp(system_of_equations, [sol.t[-1], Numerics.tfin1*365*24*60*60], sol.y[:,-1], method = 'RK45', vectorized=False, max_step=Numerics.step1*365*24*60*60)
+        sol2 = solve_ivp(system_of_equations, [sol.t[-1], Numerics.tfin1*365*24*60*60], sol.y[:,-1], method = 'RK45', vectorized=False, max_step=Numerics.step1*365*24*60*60)         
         sol3 = solve_ivp(system_of_equations, [sol2.t[-1],Max_time*365*24*60*60], sol2.y[:,-1], method = 'RK23', vectorized=False, max_step=Numerics.step2*365*24*60*60)
         total_time = np.concatenate((sol.t,sol2.t,sol3.t))
         total_y = np.concatenate((sol.y,sol2.y,sol3.y),axis=1)
@@ -1462,7 +1487,8 @@ def forward_model(SwitchInputs,PlanetInputs,InitConditions,Numerics,StellarInput
 
 
     elif Numerics.total_steps == 0: #manually enter ICs and new start time
-        ICs = [4.42928490e+20,   2.17603056e+20,   6.37100000e+06,4.90476289e+21,   2.38085608e+21,   4.90476289e+22, 2.58963126e+23,   1.53445831e+03,   3.47126528e+02,2.60727569e+02,   2.59807581e+02,   9.19988525e-01, 5.51838330e+17,   3.99448162e+20,   5.42073065e+03,8.74370829e+15,   6.35569496e+06,   0.00000000e+00]
+        ICs = [4.42928490e+20,   2.17603056e+20,   6.37100000e+06, 4.90476289e+21,   2.38085608e+21,   4.90476289e+22, 
+               2.58963126e+23,   1.53445831e+03,   3.47126528e+02, 2.60727569e+02,   2.59807581e+02,   9.19988525e-01, 5.51838330e+17,   3.99448162e+20,   5.42073065e+03,8.74370829e+15,   6.35569496e+06,   0.00000000e+00]
         Start_time_new = 277333013.66152197
         sol = solve_ivp(system_of_equations, [Start_time_new*365*24*60*60, Numerics.tfin0*365*24*60*60], ICs,dense_output=True, method = 'LSODA',max_step=Numerics.step0*365*24*60*60)#,max_step=365*24*60*60*1e3) 
         total_time = sol.t

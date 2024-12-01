@@ -35,20 +35,20 @@ class PostProcessOutput():
         self.Max_depth = []
         self.Ocean_fraction =  []
 
-        self.confidence_y = np.array()
-        self.confidence_FH2O = np.array()
-        self.confidence_FCO2 = np.array()
-        self.confidence_MH2O_liq = np.array()
-        self.confidence_MCO2_liq = np.array()
-        self.confidence_Pressre_H2O = np.array()
-        self.confidence_CO2_Pressure_array = np.array()
-        self.confidence_fO2_array = np.array()
-        self.confidence_Mass_O_atm = np.array()
-        self.confidence_Mass_O_dissolved = np.array()
-        self.confidence_water_frac = np.array()
-        self.confidence_Ocean_depth = np.array()
-        self.confidence_Max_depth = np.array()
-        self.confidence_Ocean_fraction = np.array()
+        self.confidence_y = []
+        self.confidence_FH2O = []
+        self.confidence_FCO2 = []
+        self.confidence_MH2O_liq = []
+        self.confidence_MCO2_liq = []
+        self.confidence_Pressre_H2O = []
+        self.confidence_CO2_Pressure_array = []
+        self.confidence_fO2_array = []
+        self.confidence_Mass_O_atm = []
+        self.confidence_Mass_O_dissolved = []
+        self.confidence_water_frac = []
+        self.confidence_Ocean_depth = []
+        self.confidence_Max_depth = []
+        self.confidence_Ocean_fraction = []
 
         self.f_O2_FMQ = []
         self.f_O2_IW = []
@@ -77,8 +77,6 @@ class PostProcessOutput():
         self.mantle_CO2_fraction = []
         self.mantle_H2O_fraction=[]
 
-        self.Total_Fe_array = []
-
         self.HTmin = []
         self.HTmax = []
         self.HT_duration = []
@@ -93,30 +91,30 @@ class PostProcessOutput():
         self.DH_solid =  []
         self.DH_solid =  []
 
-        self.conf_DH_atmo = np.array()
-        self.conf_DH_solid = np.array()
+        self.conf_DH_atmo = []
+        self.conf_DH_solid = []
         
-        self.conf_HT_duration = np.array()
-        self.conf_HTmax = np.array()
-        self.conf_HTmin = np.array()
+        self.conf_HT_duration = []
+        self.conf_HTmax = []
+        self.conf_HTmin = []
 
-        self.conf_Late_melt_production = np.array()
-        self.four_percentilesa = np.array()
-        self.four_percentilesb = np.array()
-        self.four_percentilesc = np.array()
-        self.four_percentilesd = np.array()
+        self.conf_Late_melt_production = []
+        self.four_percentilesa = []
+        self.four_percentilesb = []
+        self.four_percentilesc = []
+        self.four_percentilesd = []
         
         ## Mantle and magma ocean redox relative to FMQ:
-        self.confidence_mantle_CO2_fraction = np.array()
-        self.confidence_mantle_H2O_fraction = np.array()
-        self.confidence_f_O2_FMQ = np.array()
-        self.confidence_f_O2_IW = np.array()
-        self.confidence_f_O2_MH = np.array()
-        self.confidence_f_O2_mantle = np.array()
-        self.confidence_iron_ratio = np.array()
-        self.confidence_f_O2_relative_FMQ = np.array()
+        self.confidence_mantle_CO2_fraction = []
+        self.confidence_mantle_H2O_fraction = []
+        self.confidence_f_O2_FMQ = []
+        self.confidence_f_O2_IW = []
+        self.confidence_f_O2_MH = []
+        self.confidence_f_O2_mantle = []
+        self.confidence_iron_ratio = []
+        self.confidence_f_O2_relative_FMQ = []
         
-        self.Melt_volume = np.array()
-        self.Melt_volumeCOPY = np.array()
-        self.confidence_melt=np.array()
-        self.confidence_velocity =np.array()
+        self.Melt_volume = []
+        self.Melt_volumeCOPY = []
+        self.confidence_melt=[]
+        self.confidence_velocity =[]

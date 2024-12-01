@@ -14,7 +14,7 @@ if RUNTIME_WARNING is False:
     warnings.filterwarnings("ignore")   
 
 from venus_evolution.classes import * 
-from venus_evolution.main import forward_model
+from venus_evolution.forward_model import forward_model
 from venus_evolution.user_tools.tools import VENUS_ROOT
 
 class VenusParameters():
@@ -24,11 +24,6 @@ class VenusParameters():
     def __init__(self, num_runs: float = 10):
         self.num_runs = num_runs
         self.num_cores = mp.cpu_count()
-
-        if os.path.exists(os.path.join(VENUS_ROOT,'switch_garbage3')):
-            shutil.rmtree(os.path.join(VENUS_ROOT,'switch_garbage3'))
-        os.mkdir(os.path.join(VENUS_ROOT,'switch_garbage3'))
-        self.output_path = os.path.join(VENUS_ROOT,'switch_garbage3')
 
         self.VenusInputs = SwitchInputs(print_switch = "n", speedup_flag = "n", start_speed=15e6 , fin_speed=100e6,heating_switch = 0,C_cycle_switch="y",Start_time=30e6)   
         self.VenusNumerics = Numerics(total_steps = 2 ,step0 = 50.0, step1=10000.0 , step2=1e6, step3=-999, step4=-999, tfin0=self.VenusInputs.Start_time+10000, tfin1=self.VenusInputs.Start_time+30e6, tfin2=4.5e9, tfin3=-999, tfin4 = -999)
@@ -92,12 +87,15 @@ class VenusParameters():
         self.total_Fe_mol_fraction = 0.06
         self.Albedo_H_range = np.random.uniform(0.0001,0.3,self.num_runs)
 
+        self.output_path = os.path.join(VENUS_ROOT,'switch_garbage3')
+
     def create_input_files(self):
 
-        ##Output arrays and parameter inputs to be filled:
-        inputs = range(0,self.num_runs)
+        if os.path.exists(self.output_path):
+            shutil.rmtree(self.output_path)
+        os.mkdir(self.output_path)
 
-        for ii in inputs:
+        for ii in np.arange(0,self.num_runs):
 
             Venus_PlanetInputs = PlanetInputs(RE = self.RE, ME = self.ME, rc=self.rc, pm=self.pm, 
                                             Total_Fe_mol_fraction = self.total_Fe_mol_fraction, 
@@ -126,51 +124,50 @@ class VenusParameters():
             inputs_for_later = [self.VenusInputs,Venus_PlanetInputs,Venus_InitConditions,self.VenusNumerics,
                                 Sun_StellarInputs,MCInputs_ar]
         
-            sve_name = 'switch_garbage3/inputs4L%d' %ii
+            sve_name = os.path.join(self.output_path,'inputs4L%d' %ii)
             np.save(sve_name,inputs_for_later)
 
-        return inputs
-
     def run_input_files(self, i):
-        load_name = 'switch_garbage3/inputs4L%d.npy' %i
+        load_name = os.path.join(self.output_path,'inputs4L%d.npy' %i)
         max_time_attempt = 1.5
         [Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar] = np.load(load_name,allow_pickle=True)
 
         outs = forward_model(Venus_inputs,Venus_PlanetInputs,Venus_InitConditions,Venus_Numerics,Sun_StellarInputs,MCInputs_ar,max_time_attempt, runtime_warning=RUNTIME_WARNING) 
-        print('success')
+        if np.sum(outs) != 0:
+            print('success')
+        else:
+            print('outputted 0,,,,')
 
         return outs
-
-def run_prediction(parameters: VenusParameters, 
+    
+def predict(parameters: VenusParameters, 
                    output_files: str = 'Venus_ouputs_revisions', 
-                   input_files: str = 'Venus_inputs_revisions') -> Tuple[list, list]:
+                   input_files: str = 'Venus_inputs_revisions',
+                   input_path: str = 'switch_garbage3') -> Tuple[list, list]:
     '''
     Run the prediction file
     '''
+    parameters.create_input_files()
+    run_arr = np.arange(0, parameters.num_runs)
 
-    inputs = VenusParameters().create_input_files()
-
-    for i in inputs:
-        parameters.run_input_files(i)
-
-    # out = Parallel(n_jobs=parameters.num_cores)(delayed(parameters.run_input_files)(i) for i in inputs)
+    out = Parallel(n_jobs=parameters.num_cores)(delayed(parameters.run_input_files)(i) for i in run_arr)
 
     input_mega=[] # Collect input parameters for saving
     everything_to_drop = []
-    for kj in range(0,len(inputs)):
+    for kj in range(0,len(run_arr)):
         # print ('saving garbage',kj)
         if type(out[kj]) == list:
             everything_to_drop.append(kj)
         else:
-            load_name = 'switch_garbage3/inputs4L%d.npy' %kj
+            load_name = os.path.join(VENUS_ROOT,input_path,'inputs4L%d.npy' %kj)
             input_mega.append(np.load(load_name,allow_pickle=True))
 
     for drop in everything_to_drop:
         del out[drop]
 
-    np.save(output_files,out) 
-    np.save(input_files,input_mega) 
+    np.save(os.path.join('outputs',output_files),out) 
+    np.save(os.path.join('outputs',input_files),input_mega) 
 
-    shutil.rmtree('switch_garbage3')
+    shutil.rmtree(os.path.join(VENUS_ROOT,input_path))
 
     return output_files, input_files
