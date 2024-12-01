@@ -16,10 +16,10 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "MC_calc",
+            "name": "mc_calc",
             "type": "debugpy",
             "request": "launch",
-            "program": "venus_evolution/MC_calc.py",
+            "program": "venus_evolution/mc_calc.py",
             "console": "integratedTerminal"
         },
         {

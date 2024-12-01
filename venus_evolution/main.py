@@ -18,7 +18,7 @@ from escape_functions import *
 from all_classes import *
 #from outgassing_module import *
 from outgassing_module_fast import *
-from Albedo_module import *
+from albedo_module import *
 from thermodynamic_variables import *
 import time
 from numba import jit
