@@ -6,3 +6,9 @@ Venus_ouputs_revisions_gliese_1.npy filter=lfs diff=lfs merge=lfs -text
 Venus_inputs_revisions_gliese_1.npy filter=lfs diff=lfs merge=lfs -text
 Venus_inputs_revisions_gliese_2.npy filter=lfs diff=lfs merge=lfs -text
 Venus_ouputs_revisions_gliese_2.npy filter=lfs diff=lfs merge=lfs -text
+outputs/Venus_inputs_revisions_gliese_1.npy filter=lfs diff=lfs merge=lfs -text
+outputs/Venus_inputs_revisions_gliese_2.npy filter=lfs diff=lfs merge=lfs -text
+outputs/Venus_ouputs_revisions_10_base.npy filter=lfs diff=lfs merge=lfs -text
+outputs/Venus_ouputs_revisions_gliese_1.npy filter=lfs diff=lfs merge=lfs -text
+outputs/Venus_ouputs_revisions_gliese_2.npy filter=lfs diff=lfs merge=lfs -text
+outputs/Venus_inputs_revisions_10_base.npy filter=lfs diff=lfs merge=lfs -text

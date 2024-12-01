@@ -27,9 +27,9 @@ This python script contains the forward model. Typically, it should not need to 
 
 %% radiative_functions.py
 This script contains the functions for interpolating the pre-computed Outgoing Longwave Radiation (OLR) grid, the atmosphere-ocean partitioning grid, and the stratospheric water vapor grid. Two different versions of the grids are available. For stratospheric temperature sensitivity tests, use the following:
-"OLR_200_FIX_flat.npy", "Atmo_frac_200_FIX_flat.npy" and "fH2O_200_FIX_flat.npy"
+"OLR_200_FIX_flat.npy", "atmo_frac_200_FIX_flat.npy" and "fH2O_200_FIX_flat.npy"
 For all other nominal calculations, use the following (this is the default):
-"OLR_200_FIX_cold.npy", "Atmo_frac_200_FIX_cold.npy", and "fH2O_200_FIX_cold.npy"
+"OLR_200_FIX_cold.npy", "atmo_frac_200_FIX_cold.npy", and "fH2O_200_FIX_cold.npy"
 The script radiative_functions.py also contains the function "correction", which is used to incorporate atmosphere-ocean partitioning of CO2 into the OLR calculation.
 
 %% Albedo_module.py

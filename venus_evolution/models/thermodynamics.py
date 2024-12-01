@@ -2,13 +2,13 @@
 import re
 import numpy as np
 import sys
-import codecs
+import os
 
 def gibbs_helper(spec,T):
     R = 8.3145
 
-    f = open('NEWNASA.TXT','r')
-    #f = open('NEWNASA_revised.TXT','r')
+    f = open(os.path.join('reference_files','NEWNASA.TXT'),'r')
+    #f = open(os.path.join('reference_files','NEWNASA_revised.TXT'),'r')
     lines = f.readlines()
 
 
@@ -53,7 +53,7 @@ def gibbs_helper(spec,T):
 def gibbs_helper_speedy(spec,T):
     R = 8.3145
 
-    f = open('NEWNASA_tiny.TXT','r')
+    f = open(os.path.join('reference_files','NEWNASA_tiny.TXT'),'r')
     lines = f.readlines()
 
 
@@ -212,7 +212,7 @@ def gibbsAQ(spec,T,P):
 
     R = 8.3145
 
-    f = open('sprons96_edited2.dat','r')
+    f = open(os.path.join('reference_files','sprons96_edited2.dat'),'r')
     lines1 = f.readlines()
 
     lines = []
